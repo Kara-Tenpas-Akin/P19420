@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+import matplotlib.pyplot as plt
 
 
 class Window(Frame):
