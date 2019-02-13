@@ -56,11 +56,12 @@ class Window(Frame):
 
         # Graph portion
 
-        list_x = []                 # make vector for x-axis
+        list_x = []                 # make lists for data set 1
         list_y = []
-        list_x2 = []                 # make vector for x-axis
+        list_x2 = []                 # make lists for data set 2
         list_y2 = []
-
+        list_x3 = []                 # make lists for data set 3
+        list_y3 = []
         with open('data.txt','r') as csvfile:
             plots = csv.reader(csvfile, delimiter=',')
             for row in plots:
@@ -72,6 +73,12 @@ class Window(Frame):
             for row in plots:
                 list_x2.append(int(row[0]))
                 list_y2.append(int(row[1]))
+
+        with open('data3.txt','r') as csvfile:
+            plots = csv.reader(csvfile, delimiter=',')
+            for row in plots:
+                list_x3.append(int(row[0]))
+                list_y3.append(int(row[1]))
         
         # make a new graph area
         g = Pmw.Blt.Graph(tab1)                     
@@ -80,7 +87,7 @@ class Window(Frame):
         color = ['red', '#ff9900', 'blue', '#00cc00', 'black', 'grey']
 
         #First line              
-        curvename = str('Temp 1')
+        curvename = str('Inside Temp')
         g.line_create(curvename,             
                         xdata=tuple(list_x),  
                         ydata=tuple(list_y),
@@ -89,7 +96,7 @@ class Window(Frame):
                         linewidth=2,             
                         symbol='')
         #Second line               
-        curvename = str('Temp 2')
+        curvename = str('Outside Temp')
         g.line_create(curvename,             
                         xdata=tuple(list_x2),  
                         ydata=tuple(list_y2),
@@ -104,7 +111,7 @@ class Window(Frame):
         gg = Pmw.Blt.Graph(tab1)                     
         gg.pack(expand=1, fill='both',padx=10, pady=10)
 
-        color = ['blue', '#00cc00', 'black', 'grey']
+        color = ['blue', '#00cc00', 'grey']
 
         #First line                
         curvename = str('Row 1')
@@ -124,7 +131,15 @@ class Window(Frame):
                         smooth='natural',        
                         linewidth=2,             
                         symbol='')
-    
+        #Third line              
+        curvename = str('Row 3')
+        gg.line_create(curvename,             
+                        xdata=tuple(list_x3),  
+                        ydata=tuple(list_y3),
+                        color=color[2],          
+                        smooth='natural',        
+                        linewidth=2,             
+                        symbol='')
         gg.configure(title='Moisture',height=200) 
 
         
@@ -132,7 +147,8 @@ class Window(Frame):
         buttons = Pmw.ButtonBox(tab1, labelpos='n', label_text='Options')
         buttons.pack(fill='both', expand=0, padx=200, pady=10)
         buttons.add('Refresh', command=self.refresh)
-        buttons.add('Grid', command=g.grid_toggle)
+        buttons.add('Temp Grid', command=g.grid_toggle)
+        buttons.add('Moisture Grid', command=gg.grid_toggle)
         buttons.add('Download Data', command=self.download)
 
 # Functions
