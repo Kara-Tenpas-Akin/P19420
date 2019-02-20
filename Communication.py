@@ -9,10 +9,11 @@ class commThread2(threading.Thread):
         self.name = name
         print("Comm thread is initialized")
 
-    def sun(self):
+    def run(self):
         #does stuff here
-        #call run() to execute blocking
+
         #csll start() to execute non-blocking
         while(True):
             print("Comm Thread is running")
+            #put code
             time.sleep(2)

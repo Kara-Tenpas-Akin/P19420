@@ -4,6 +4,8 @@ from tkinter import messagebox
 import Pmw                      # The Python MegaWidget package
 import math
 import csv
+import threading
+import time
 
 ncurves = 4                  # draw 4 curves
 npoints = 7                  # use  7 points on each curve
@@ -171,12 +173,20 @@ class Window(Frame):
     def heat(self):
         messagebox.askyesnocancel('Heating System', 'Turn on heating system?')
 
+class guiThread1(threading.Thread):
+    def __init__(self,name):
+        threading.Thread.__init__(self)
+        self.name = name
+        print("GUI thread is initialized")
+
+    def run(self):
+        # End of code        
+        root = Tk()
+        app = Window(root)
+        root.mainloop()  
+        while(True):
+            print("GUI Thread is running")
+            time.sleep(2)
 
 
-# End of code        
-root = Tk()
 
-#root.geometry("900x800")
-
-app = Window(root)
-root.mainloop()  
