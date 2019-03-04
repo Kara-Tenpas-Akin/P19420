@@ -1,3 +1,4 @@
+
 from tkinter import *           # The Tk package
 from tkinter import ttk
 from tkinter import messagebox
@@ -6,12 +7,6 @@ import math
 import csv
 import threading
 import time
-
-ncurves = 4                  # draw 4 curves
-npoints = 7                  # use  7 points on each curve
-
-vector_x = []                 # make vector for x-axis
-vector_y = []
 
 class Window(Frame):
 
@@ -36,23 +31,25 @@ class Window(Frame):
         tab_control.add(tab1, text='Status')
         quitButton = Button(tab1, text="Emergency Stop", command=self.client_exit, bg="red", fg="white")
         quitButton.pack(expand=1, fill='y',padx=50, pady=50)
-        quitButton.place(x=555,y=5)
+        quitButton.place(x=1125,y=5)
 
         # Tab 2
         tab_control.add(tab2, text='Controls')
         quitButton = Button(tab2, text="Emergency Stop", command=self.client_exit, bg="red", fg="white")
-        quitButton.place(x=430,y=5)
-        plantButtons = Pmw.ButtonBox(tab2, labelpos='n', label_text='Options')
-        plantButtons.pack(fill='both', expand=1, padx=200, pady=200)
-        #plantButtons.place(x=430,y=5)
-        plantButtons.add('Fertigate', command=self.fertigate, bg="green", fg="white")
-        plantButtons.add('Water', command=self.water, bg="blue", fg="white")
-        plantButtons.add('Heat',command=self.heat, bg="orange", fg="white")
-
+        quitButton.place(x=1125,y=5)
+        fertigateButton = Button(tab2, text = 'Fertigate', command=self.fertigate, bg="green", fg="white", height = 10, width = 20)
+        fertigateButton.place(x=100,y=300)
+        waterButton = Button(tab2, text = 'Water', command=self.water, bg="blue", fg="white", height = 10, width = 20)
+        waterButton.place(x=550,y=300)
+        heatButton = Button(tab2, text = 'Heat',command=self.heat, bg="orange", fg="white", height = 10, width = 20)
+        heatButton.place(x=1000,y=300)
+        
         # Tab 3
         tab_control.add(tab3, text='Error Status')
         quitButton = Button(tab3, text="Emergency Stop", command=self.client_exit, bg="red", fg="white")
-        quitButton.place(x=430,y=5)
+        quitButton.place(x=1125,y=5)
+        everythingButton = Button(tab3, text="Everything is working", bg="green", fg="white", height = 30, width = 50)
+        everythingButton.place(x=550,y=200)
 
         tab_control.pack(expand=1, fill='both')
 
@@ -172,21 +169,25 @@ class Window(Frame):
 
     def heat(self):
         messagebox.askyesnocancel('Heating System', 'Turn on heating system?')
+        
+# Uncomment when threading
 
-class guiThread1(threading.Thread):
-    def __init__(self,name):
-        threading.Thread.__init__(self)
-        self.name = name
-        print("GUI thread is initialized")
+#class guiThread1(threading.Thread):
+    #def __init__(self,name):
+        #threading.Thread.__init__(self)
+        #self.name = name
+        #print("GUI thread is initialized")
 
-    def run(self):
+    #def run(self):
         # End of code        
-        root = Tk()
-        app = Window(root)
-        root.mainloop()  
-        while(True):
-            print("GUI Thread is running")
-            time.sleep(2)
+        #root = Tk()
+        #app = Window(root)
+        #root.mainloop()  
+        #while(True):
+            #print("GUI Thread is running")
+            #time.sleep(2)
 
-
+root = Tk()
+app = Window(root)
+root.mainloop()  
 
