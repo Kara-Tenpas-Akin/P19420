@@ -2,6 +2,7 @@
 from tkinter import *           # The Tk package
 from tkinter import ttk
 from tkinter import messagebox
+from tkinter import Tk
 import Pmw                      # The Python MegaWidget package
 import math
 import csv
@@ -56,9 +57,10 @@ class Window(Frame):
         everythingButton = Button(tab3, text="Everything is working", bg="green", fg="white", height = 30, width = 50)
         everythingButton.place(x=550,y=200)
         # Picture
-        img = Image(Image.open("Error.png"))
-        panel = Label(tab3,image = img)
-        panel.pack()
+        canvas = Canvas(tab3, width = 300, height = 300)      
+        canvas.pack()      
+        img = PhotoImage(file="Error.gif")      
+        canvas.create_image(20,20, anchor=NW, image=img)  
 
         # Graph portion
 
