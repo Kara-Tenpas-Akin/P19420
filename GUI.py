@@ -1,15 +1,11 @@
-
 from tkinter import *           # The Tk package
 from tkinter import ttk
 from tkinter import messagebox
-from tkinter import Tk
 import Pmw                      # The Python MegaWidget package
 import math
 import csv
 import threading
 import time
-from PIL import Image
-
 
 class Window(Frame):
 
@@ -32,14 +28,12 @@ class Window(Frame):
 
         # Tab 1
         tab_control.add(tab1, text='Status')
-        # Buttons
         quitButton = Button(tab1, text="Emergency Stop", command=self.client_exit, bg="red", fg="white")
         quitButton.pack(expand=1, fill='y',padx=50, pady=50)
         quitButton.place(x=1125,y=5)
 
         # Tab 2
         tab_control.add(tab2, text='Controls')
-        # Buttons
         quitButton = Button(tab2, text="Emergency Stop", command=self.client_exit, bg="red", fg="white")
         quitButton.place(x=1125,y=5)
         fertigateButton = Button(tab2, text = 'Fertigate', command=self.fertigate, bg="green", fg="white", height = 10, width = 20)
@@ -51,16 +45,12 @@ class Window(Frame):
         
         # Tab 3
         tab_control.add(tab3, text='Error Status')
-        # Buttons
         quitButton = Button(tab3, text="Emergency Stop", command=self.client_exit, bg="red", fg="white")
         quitButton.place(x=1125,y=5)
         everythingButton = Button(tab3, text="Everything is working", bg="green", fg="white", height = 30, width = 50)
         everythingButton.place(x=550,y=200)
-        # Picture
-        canvas = Canvas(tab3, width = 300, height = 300)      
-        canvas.pack()      
-        img = PhotoImage(file="Error.gif")      
-        canvas.create_image(20,20, anchor=NW, image=img)  
+
+        tab_control.pack(expand=1, fill='both')
 
         # Graph portion
 
@@ -198,5 +188,4 @@ class Window(Frame):
 
 root = Tk()
 app = Window(root)
-root.mainloop()  
-
+root.mainloop()
