@@ -1,6 +1,7 @@
 from tkinter import *           # The Tk package
 from tkinter import ttk
 from tkinter import messagebox
+import tkinter as tk
 import Pmw                      # The Python MegaWidget package
 import math
 import csv
@@ -21,19 +22,26 @@ class Window(Frame):
 
         # Creation of Tabs
         tab_control = ttk.Notebook(self)
-        
         tab1 = ttk.Frame(tab_control)
         tab2 = ttk.Frame(tab_control)
         tab3 = ttk.Frame(tab_control)
 
         # Tab 1
         tab_control.add(tab1, text='Status')
+        # Buttons
         quitButton = Button(tab1, text="Emergency Stop", command=self.client_exit, bg="red", fg="white")
         quitButton.pack(expand=1, fill='y',padx=50, pady=50)
         quitButton.place(x=1125,y=5)
-
+        # Text
+        w1 = Label(tab1, padx=10, text="Current Temp (1): 52.2 F", 
+                   bg ="white", font="Helvetica 16 bold").pack(side="right")
+        w2 = Label(tab1, padx=10, text="Current Temp (2): 41.3", 
+                   bg ="white", font="Helvetica 16 bold").pack(side="right")
+        
+        
         # Tab 2
         tab_control.add(tab2, text='Controls')
+        # Buttons 
         quitButton = Button(tab2, text="Emergency Stop", command=self.client_exit, bg="red", fg="white")
         quitButton.place(x=1125,y=5)
         fertigateButton = Button(tab2, text = 'Fertigate', command=self.fertigate, bg="green", fg="white", height = 10, width = 20)
@@ -45,10 +53,14 @@ class Window(Frame):
         
         # Tab 3
         tab_control.add(tab3, text='Error Status')
+        # Buttons
         quitButton = Button(tab3, text="Emergency Stop", command=self.client_exit, bg="red", fg="white")
         quitButton.place(x=1125,y=5)
         everythingButton = Button(tab3, text="Everything is working", bg="green", fg="white", height = 30, width = 50)
         everythingButton.place(x=550,y=200)
+        # Picture
+        #errorPic = tk.PhotoImage(file="Error.gif")
+        #w1 = tk.Label(tab3,image=errorPic)
 
         tab_control.pack(expand=1, fill='both')
 
