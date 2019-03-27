@@ -1,6 +1,7 @@
 from tkinter import *           # The Tk package
 from tkinter import ttk
 from tkinter import messagebox
+#from tkinter import PhotoImage
 import tkinter as tk
 import Pmw                      # The Python MegaWidget package
 import math
@@ -26,41 +27,75 @@ class Window(Frame):
         tab2 = ttk.Frame(tab_control)
         tab3 = ttk.Frame(tab_control)
 
-        # Tab 1
+# Tab 1
         tab_control.add(tab1, text='Status')
         # Buttons
-        quitButton = Button(tab1, text="Emergency Stop", command=self.client_exit, bg="red", fg="white")
-        quitButton.pack(expand=1, fill='y',padx=50, pady=50)
-        quitButton.place(x=1125,y=5)
+        quitButton = Button(tab1, text="Emergency Stop", command=self.client_exit, bg="red", fg="white", height = 5, width = 20)
+        quitButton.grid(row=0, column=2)
         # Text
-        w1 = Label(tab1, padx=10, text="Current Temp (1): 52.2 F", 
-                   bg ="white", font="Helvetica 16 bold").pack(side="right")
-        w2 = Label(tab1, padx=10, text="Current Temp (2): 41.3", 
-                   bg ="white", font="Helvetica 16 bold").pack(side="right")
+        Title = Label(tab1, text="Durgin Family Farms Blackberry Hightunnel", font=("Helvetica",24))
+        Title.grid(row=0, column=1)
+        temp1 = Label(tab1, text="53.2F", font=("Helvetica",24))
+        temp1.grid(row=1, column=2)
+        temp1w = Label(tab1, text="Current Temperature Inside")
+        temp1w.grid(row=2, column=2)
+        temp2 = Label(tab1, text="53.2F")
+        temp2.grid(row=3, column=2)
+        temp2w = Label(tab1, text="Current Temperature Outside")
+        temp2.grid(row=4, column=2)
+
+        mois1 = Label(tab1,text="200")
+        mois1.grid(row=5, column=2)
+        mois1w = Label(tab1,text="Row 1")
+        mois1w.grid(row=6, column=2)
+        mois2 = Label(tab1,text="300")
+        mois2.grid(row=7, column=2)
+        mois2w = Label(tab1,text="Row 2")
+        mois2w.grid(row=8, column=2)
+        mois2 = Label(tab1,text="255")
+        mois2.grid(row=9, column=2)
+        mois2w = Label(tab1,text="Row 3")
+        mois2w.grid(row=10, column=2)
         
+        # Graphs
+        # Temp Graph
+        g = Pmw.Blt.Graph(tab1)                     
+        g.grid(row=1, column=1)
+        # Moisture Graph
+        gg = Pmw.Blt.Graph(tab1)                     
+        gg.grid(row=2, column=1)
+        # Buttons to control graphs + other
+        buttons = Pmw.ButtonBox(tab1, labelpos='n', label_text='Options')
+        buttons.grid(row=3, column=1)
+        buttons.add('Refresh', command=self.refresh)
+        buttons.add('Temp Grid', command=g.grid_toggle)
+        buttons.add('Moisture Grid', command=gg.grid_toggle)
+        buttons.add('Download Data', command=self.download)
+
+        # Configure Grid
         
-        # Tab 2
+# Tab 2
         tab_control.add(tab2, text='Controls')
         # Buttons 
-        quitButton = Button(tab2, text="Emergency Stop", command=self.client_exit, bg="red", fg="white")
-        quitButton.place(x=1125,y=5)
-        fertigateButton = Button(tab2, text = 'Fertigate', command=self.fertigate, bg="green", fg="white", height = 10, width = 20)
-        fertigateButton.place(x=100,y=300)
+        quitButton = Button(tab2, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
+        quitButton.grid(row=0, column=3)
+        fertigateButton = Button(tab2, text = 'Fertigate', command=self.fertigate,bg="green", fg="white", height = 10, width = 20)
+        fertigateButton.grid(row=1, column=1)
         waterButton = Button(tab2, text = 'Water', command=self.water, bg="blue", fg="white", height = 10, width = 20)
-        waterButton.place(x=550,y=300)
+        waterButton.grid(row=1, column=2)
         heatButton = Button(tab2, text = 'Heat',command=self.heat, bg="orange", fg="white", height = 10, width = 20)
-        heatButton.place(x=1000,y=300)
+        heatButton.grid(row=1, column=3)
         
-        # Tab 3
+# Tab 3
         tab_control.add(tab3, text='Error Status')
         # Buttons
-        quitButton = Button(tab3, text="Emergency Stop", command=self.client_exit, bg="red", fg="white")
-        quitButton.place(x=1125,y=5)
-        everythingButton = Button(tab3, text="Everything is working", bg="green", fg="white", height = 30, width = 50)
-        everythingButton.place(x=550,y=200)
+        quitButton = Button(tab3, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
+        quitButton.grid(row=0, column=1, sticky=E)
         # Picture
-        #errorPic = tk.PhotoImage(file="Error.gif")
-        #w1 = tk.Label(tab3,image=errorPic)
+        errorPic = tk.PhotoImage(file="error.gif")
+        w1 = tk.Label(tab3,image=errorPic)
+        w1.image = errorPic  # keep a reference!
+        w1.grid(row=1, column=1)
 
         tab_control.pack(expand=1, fill='both')
 
@@ -90,10 +125,6 @@ class Window(Frame):
                 list_x3.append(int(row[0]))
                 list_y3.append(int(row[1]))
         
-        # make a new graph area
-        g = Pmw.Blt.Graph(tab1)                     
-        g.pack(expand=1, fill='both',padx=10, pady=40)
-
         color = ['red', '#ff9900', 'blue', '#00cc00', 'black', 'grey']
 
         #First line              
@@ -115,11 +146,8 @@ class Window(Frame):
                         linewidth=2,             
                         symbol='')
     
-        g.configure(title='Temperature',height=200)  
+        g.configure(title='Temperature', height=300, width=1000)  
 
-        # make a new graph area
-        gg = Pmw.Blt.Graph(tab1)                     
-        gg.pack(expand=1, fill='both',padx=10, pady=10)
 
         color = ['blue', '#00cc00', 'grey']
 
@@ -150,16 +178,8 @@ class Window(Frame):
                         smooth='natural',        
                         linewidth=2,             
                         symbol='')
-        gg.configure(title='Moisture',height=200) 
+        gg.configure(title='Moisture', height=300, width=1000)   
 
-        
-        # make a row of buttons
-        buttons = Pmw.ButtonBox(tab1, labelpos='n', label_text='Options')
-        buttons.pack(fill='both', expand=0, padx=200, pady=10)
-        buttons.add('Refresh', command=self.refresh)
-        buttons.add('Temp Grid', command=g.grid_toggle)
-        buttons.add('Moisture Grid', command=gg.grid_toggle)
-        buttons.add('Download Data', command=self.download)
 
 # Functions
 
