@@ -9,28 +9,31 @@ import csv
 import threading
 import time
 
-class Window(Frame):
+root = Tk()
 
-    def __init__(self, master=None):
-        Frame.__init__(self, master)                 
-        self.master = master
-        self.init_window()
+#class Window(Frame):
+
+   # def __init__(self, master=None):
+   #     Frame.__init__(self, master)                 
+   #     self.master = master
+   #     self.init_window()
 
     #Creation of init_window
-    def init_window(self):    
-        self.master.title("GUI")
-        self.pack(fill=BOTH, expand=1)
+   # def init_window(self):    
+   #     self.master.title("GUI")
+   #     self.pack(fill=BOTH, expand=1)
 
         # Creation of Tabs
-        tab_control = ttk.Notebook(self)
-        tab1 = ttk.Frame(tab_control)
-        tab2 = ttk.Frame(tab_control)
-        tab3 = ttk.Frame(tab_control)
+tab_control = ttk.Notebook(root)
+tab1 = ttk.Frame(tab_control)
+tab2 = ttk.Frame(tab_control)
+tab3 = ttk.Frame(tab_control)
+tab4 = ttk.Frame(tab_control)
 
 # Tab 1
         tab_control.add(tab1, text='Status')
         # Buttons
-        quitButton = Button(tab1, text="Emergency Stop", command=self.client_exit, bg="red", fg="white", height = 5, width = 20)
+        quitButton = Button(tab1, text="Emergency Stop", command=client_exit, bg="red", fg="white", height = 5, width = 20)
         quitButton.grid(row=0, column=2)
         # Text
         Title = Label(tab1, text="Durgin Family Farms Blackberry Hightunnel", font=("Helvetica",24))
@@ -85,7 +88,16 @@ class Window(Frame):
         waterButton.grid(row=1, column=2)
         heatButton = Button(tab2, text = 'Heat',command=self.heat, bg="orange", fg="white", height = 10, width = 20)
         heatButton.grid(row=1, column=3)
-        
+
+        if MsgBox == 'yes':
+            fertON = Label(tab2, text="ON")
+            fertON.grid(row=4, column=1)
+        if MsgBox == 'no':
+            fertOFF = Label(tab2, text="OFF")
+            fertOFF.grid(row=4, column=1)
+        else:
+            fertWhat = Label(tab2, text="what")
+            fertWhat.grid(row=4, column=1)
 # Tab 3
         tab_control.add(tab3, text='Error Status')
         # Buttons
@@ -98,9 +110,15 @@ class Window(Frame):
         w1.grid(row=1, column=1)
 
         tab_control.pack(expand=1, fill='both')
+# Tab 4
+        tab_control.add(tab4, text='Maintenance')
+        quitButton = Button(tab2, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
+        quitButton.grid(row=0, column=3)
 
-        # Graph portion
 
+
+        
+# Graph portion
         list_x = []                 # make lists for data set 1
         list_y = []
         list_x2 = []                 # make lists for data set 2
@@ -192,8 +210,9 @@ class Window(Frame):
     def refresh(self):
         messagebox.showinfo('Refresh', 'Refresh of graphs completed.')
 
-    def fertigate(self):
-        messagebox.askyesnocancel('Fetigation System', 'Turn on fertigation system?')
+    def fertigate(Frame):
+        MsgBoxF = messagebox.askyesnocancel('Fetigation System', 'Turn on fertigation system?')
+        return MsgBoxF
 
     def water(self):
         messagebox.askyesnocancel('Irrigation System', 'Turn on irragation system?')
@@ -218,6 +237,6 @@ class Window(Frame):
             #print("GUI Thread is running")
             #time.sleep(2)
 
-root = Tk()
-app = Window(root)
-root.mainloop()
+#root = Tk()
+#app = Window(root)
+root.mainloop() 
