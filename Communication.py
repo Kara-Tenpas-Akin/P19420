@@ -1,8 +1,8 @@
+#!/usr/bin/env python3
 # Communication from Pi to Arduino
-
 import threading
 import time, random
-#import GUI from guiThread1 as gui
+#from GUI import guiThread1 as gui
 
 class commThread2(threading.Thread):
     def __init__(self,name):
