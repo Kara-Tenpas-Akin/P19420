@@ -4,7 +4,7 @@
 from tkinter import *           # The Tk package
 from tkinter import ttk
 from tkinter import messagebox
-#from Communication import commThread2 as comm
+from Communication import commThread2 as comm
 import tkinter as tk
 import Pmw                   # The Python MegaWidget package
 import math, threading, time, random
@@ -24,7 +24,7 @@ class guiThread1(threading.Thread):
     
     # Functions
     def client_exit():
-        exit()
+        comm.testComm()
     
     def download():
         messagebox.showinfo('Download Data', 'Download completed.')
@@ -44,7 +44,8 @@ class guiThread1(threading.Thread):
     
     def heat():
         messagebox.askyesnocancel('Heating System', 'Turn on heating system?')
-    
+
+    def testGUI(): print('gui function call is working')
         
     # Creation of Tabs
     tab_control = ttk.Notebook(root)

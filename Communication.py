@@ -2,7 +2,7 @@
 # Communication from Pi to Arduino
 import threading
 import time, random
-#from GUI import guiThread1 as gui
+from GUI import guiThread1 as gui
 
 class commThread2(threading.Thread):
     def __init__(self,name):
@@ -11,14 +11,13 @@ class commThread2(threading.Thread):
         print("Comm thread is initialized")
 
     def run(self):
-        #does stuff here
-        
         #call start() to execute non-blocking
         while(True):
             print("Comm Thread is running")
-            #put code
+            gui.testGUI()
             time.sleep(2)
-
+            
+    def testComm(): print('comm function call is working')
             
     def getGraphData():
         data = []
