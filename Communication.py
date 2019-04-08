@@ -2,7 +2,7 @@
 # Communication from Pi to Arduino
 import threading
 import time, random
-from GUI import guiThread1 as gui
+#from GUI import guiThread1 as gui
 
 class commThread2(threading.Thread):
     def __init__(self,name):
@@ -14,7 +14,7 @@ class commThread2(threading.Thread):
         #call start() to execute non-blocking
         while(True):
             print("Comm Thread is running")
-            gui.testGUI()
+            
             time.sleep(2)
             
     def testComm(): print('comm function call is working')
