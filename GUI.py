@@ -7,6 +7,7 @@ from tkinter import messagebox
 from Communication import commThread2 as comm
 import tkinter as tk
 import Pmw                   # The Python MegaWidget package
+import datetime as dt
 import math, threading, time, random
 from matplotlib import pyplot as plt
 import matplotlib.animation as animation
@@ -21,7 +22,8 @@ class guiThread1(threading.Thread):
     
     # Functions
     def client_exit(self):
-        comm.testComm()
+        #queue.put("e")
+        exit()
     
     def download(self):
         messagebox.showinfo('Download Data', 'Download completed.')
@@ -114,59 +116,87 @@ class guiThread1(threading.Thread):
             quitButton.grid(row=0, column=3)
             
             # Graphs
-            xar = []
-            yar = []
-            xar2 = []
-            yar2 = []
-            xar3 = []
-            yar3 = []
-            xar4 = []
-            yar4 = []
-            xar5 = []
-            yar5 = []
-            
-            def animate(i):
-                yar.append(99-i)
-                xar.append(i)
-                yar2.append(88-i)
-                xar2.append(i)
-                line1.set_data(xar, yar)
-                line2.set_data(xar2, yar2)
-                ax1.set_xlim(0, i+1)
-                yar3.append(99-i)
-                xar3.append(i)
-                yar4.append(77-i)
-                xar4.append(i) 
-                yar5.append(66-i)
-                xar5.append(i)
-                line3.set_data(xar3, yar3)
-                line4.set_data(xar4, yar4)
-                line5.set_data(xar5, yar5)
-                ax2.set_xlim(0, i+1)
-            
             style.use('ggplot')
-            fig = plt.figure(figsize=(10, 3), dpi=100)
-            ax1 = fig.add_subplot(1, 1, 1)
+            # Temp Graph
+            fig1 = plt.figure(figsize=(10, 6), dpi=100)
+            ax1 = fig1.add_subplot(2, 1, 1)
             ax1.set_ylim(0, 150)
-            line1, line2 = ax1.plot(xar, yar, '--o', xar2, yar2, '--bo')
             ax1.set_title('Temperature', fontsize=16)
-            ax1.legend((line1,line2), ('Temp Inside','Temp Outside'), loc='upper right', shadow=True)
-            
-            plotcanvas = FigureCanvasTkAgg(fig, tab1)
-            plotcanvas.get_tk_widget().grid(column=1, row=1)
-            ani = animation.FuncAnimation(fig, animate, interval=800, blit=False)
-            
-            style.use('ggplot')
-            fig2 = plt.figure(figsize=(10, 3), dpi=100)
-            ax2 = fig2.add_subplot(1, 1, 1)
+            ax1.legend(('Temp Inside','Temp Outside'), loc='upper right', shadow=True)
+            # Moisture Graph
+            #fig2 = plt.figure(figsize=(10, 3), dpi=100)
+            ax2 = fig1.add_subplot(2, 1, 2)
             ax2.set_ylim(0, 150)
-            line3, line4, line5 = ax2.plot(xar3, yar3, '--ro', xar4, yar4, '--go', xar5, yar5, '--yo')
             ax2.set_title('Moisture', fontsize=16)
-            ax2.legend((line3,line4,line5), ('Row 1','Row 2','Row 3'), loc='upper right', shadow=True)
+            ax2.legend(('Row 1','Row 2','Row 3'), loc='upper right', shadow=True)
+            # Data
+            time = []
+            insideTemp = []
+            outsideTemp = []
+            time_rows = []
+            row1 = []
+            row2 = []
+            row3 = []
+
+            def animate1(i, time, insideTemp, outsideTemp, row1, row2, row3):
+                dataI = comm.getGraphData()
+                dataO = comm.getGraphData()
+                
+                time.append(dt.datetime.now().strftime('%H:%M.%f'))
+                print("animate1: time", time)
+                print("dataI: ", dataI, "insidetemp: ", insideTemp)
+                insideTemp.append(dataI[0])
+                print("animate1: insideTemp", insideTemp)
+                outsideTemp.append(dataO[0])
+                print("animate1: outsideTemp", outsideTemp)
+
+                data1 = comm.getGraphData()
+                data2 = comm.getGraphData()
+                data3 = comm.getGraphData()
+                print("animate1: time", time)
+                row1.append(data1[0])
+                print("animate1: row1", row1)
+                row2.append(data2[0])
+                print("animate1: row2", row2)
+                row3.append(data3[0])
+                print("animate1: row3", row3)
+ 
+                time = time[-10:]
+                insideTemp = insideTemp[-10:]
+                outsideTemp = outsideTemp[-10:]
+                row1 = row1[-10:]
+                row2 = row2[-10:]
+                row3 = row3[-10:]
+
+                ax1.clear()
+                ax1.plot(time, insideTemp, time, outsideTemp)
+                ax2.clear()
+                ax2.plot(time, row1, time, row2, time, row3)
+
+            plotcanvas1 = FigureCanvasTkAgg(fig1, tab1)
+            plotcanvas1.get_tk_widget().grid(column=1, row=1)
+            ani1 = animation.FuncAnimation(fig1, animate1, fargs=(time, insideTemp, outsideTemp, row1, row2, row3),interval=3000, blit=False)
             
-            plotcanvas2 = FigureCanvasTkAgg(fig2, tab1)
-            plotcanvas2.get_tk_widget().grid(column=1, row=2)
-            ani2 = animation.FuncAnimation(fig2, animate, interval=1000, blit=False)
+            '''#def animate2(i, time, insideTemp, outsideTemp, row1, row2, row3):
+                #time.sleep(1)
+                print("animate2: time", time)
+                print("animate2: row1", row1)
+                print("animate2: row2", row2)
+                print("animate2: row3", row3)
+
+                #while (flag =
+                ax2.clear()
+                ax2.plot(time, row1, time, row2, time, row3)'''
             
+
+            '''plotcanvas1 = FigureCanvasTkAgg(fig1, tab1)
+            plotcanvas1.get_tk_widget().grid(column=1, row=1)
+            ani1 = animation.FuncAnimation(fig1, animate1, fargs=(time, insideTemp, outsideTemp, row1, row2, row3),interval=3000, blit=False)
+            
+            
+            #plotcanvas2 = FigureCanvasTkAgg(fig2, tab1)
+            #plotcanvas2.get_tk_widget().grid(column=1, row=2)
+            #ani2 = animation.FuncAnimation(fig2, animate2, fargs=(time, insideTemp, outsideTemp, row1, row2, row3),interval=3000, blit=False)
+            '''
             
             root.mainloop()

@@ -13,13 +13,11 @@ class commThread2(threading.Thread):
     def run(self):
         #call start() to execute non-blocking
         while(True):
-            print("Comm Thread is running")
-            
+            # put code here
             time.sleep(2)
             
     def testComm(): print('comm function call is working')
             
     def getGraphData():
-        data = []
-        data = random.sample(range(0, 100), 10)
+        data = random.sample(range(0, 100), 1)
         return data
