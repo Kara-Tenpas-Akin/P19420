@@ -30,21 +30,35 @@ class guiThread1(threading.Thread):
     def download(self):
         messagebox.showinfo('Download Data', 'Download completed.')
     
-    def refresh(self):
-        messagebox.showinfo('Refresh', 'Refresh of graphs completed.')
-    
     def fertigate(self):
-        MsgBoxF = messagebox.askyesnocancel('Fetigation System', 'Turn on fertigation system?')
-        if MsgBoxF == "Yes":
-            print('yes')
-        if MsgBoxF == "No":
-            print('no')
+        fert_ask = Label(tab2, text="Are you sure?", font=("Helvetica",24))
+        fert_ask.grid(row=2, column=1)
+        fert_yes = Button(tab2, text="Yes", command=self.yes)
+        fert_yes.grid(row=3, column=2)
+        fert_no = Button(tab2, text="No", command=self.no)
+        fert_no.grid(row=4, column=3)
     
     def water(self):
-        messagebox.askyesnocancel('Irrigation System', 'Turn on irragation system?')
+        water_ask = Label(tab2, text="Are you sure?", font=("Helvetica",24))
+        water_ask.grid(row=2, column=4)
+        water_yes = Button(tab2, text="Yes", command=self.yes)
+        water_yes.grid(row=3, column=5)
+        water_no = Button(tab2, text="No", command=self.no)
+        water_no.grid(row=4, column=6)
     
-    def heat(self):
-        messagebox.askyesnocancel('Heating System', 'Turn on heating system?')
+    def vent(self):
+        vent_ask = Label(tab2, text="Are you sure?", font=("Helvetica",24))
+        vent_ask.grid(row=2, column=7)
+        vent_yes = Button(tab2, text="Yes", command=self.yes)
+        vent_yes.grid(row=3, column=8)
+        vent_no = Button(tab2, text="No", command=self.no)
+        vent_no.grid(row=4, column=9)
+
+    def yes(self):
+        print("yes")
+
+    def no(self):
+        print("no")
 
     def run(self):
         while(True):
@@ -85,35 +99,62 @@ class guiThread1(threading.Thread):
             quitButton = Button(tab2, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
             quitButton.grid(row=0, column=3)
             fertigateButton = Button(tab2, text = 'Fertigate', command=self.fertigate,bg="green", fg="white", height = 10, width = 20)
-            fertigateButton.grid(row=1, column=1)
+            fertigateButton.grid(row=1, column=1, padx=100, pady=100)
+            fert_ask = Label(tab2, text="Are you sure?", font=("Helvetica",24))
+            fert_ask.grid(row=2, column=1)
+            #fert_ask.visible = not fert_ask.visible
+            fert_yes = Button(tab2, text="Yes", command=self.yes, height=5, width=5)
+            fert_yes.grid(row=3, column=1, sticky=W, padx=50, pady=50)
+            fert_no = Button(tab2, text="No", command=self.no, height=5, width=5)
+            fert_no.grid(row=3, column=1, sticky=E, padx=50, pady=50)
+
             waterButton = Button(tab2, text = 'Water', command=self.water, bg="blue", fg="white", height = 10, width = 20)
-            waterButton.grid(row=1, column=2)
-            heatButton = Button(tab2, text = 'Ventilation',command=self.heat, bg="orange", fg="white", height = 10, width = 20)
-            heatButton.grid(row=1, column=3)
+            waterButton.grid(row=1, column=2, padx=100, pady=100)
+            water_ask = Label(tab2, text="Are you sure?", font=("Helvetica",24))
+            water_ask.grid(row=2, column=2)
+            water_yes = Button(tab2, text="Yes", command=self.yes, height=5, width=5)
+            water_yes.grid(row=3, column=2, sticky=W)
+            water_no = Button(tab2, text="No", command=self.no, height=5, width=5)
+            water_no.grid(row=3, column=2, sticky=E)
+        
+            heatButton = Button(tab2, text = 'Ventilation',command=self.vent, bg="orange", fg="white", height = 10, width = 20)
+            heatButton.grid(row=1, column=3, padx=100, pady=100)
+            vent_ask = Label(tab2, text="Are you sure?", font=("Helvetica",24))
+            vent_ask.grid(row=2, column=3)
+            vent_yes = Button(tab2, text="Yes", command=self.yes, height=5, width=5)
+            vent_yes.grid(row=3, column=3, sticky=W)
+            vent_no = Button(tab2, text="No", command=self.no, height=5, width=5)
+            vent_no.grid(row=3, column=3, sticky=E)
                     
             # Tab 3
             tab_control.add(tab3, text='Error Status')
             # Buttons
             quitButton = Button(tab3, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
-            quitButton.grid(row=0, column=1, sticky=E)
-            # Picture
+            quitButton.grid(row=0, column=2, sticky=E)
+            # Picture of Sensors for Error page
             errorPic = tk.PhotoImage(file="error.gif")
             w1 = tk.Label(tab3,image=errorPic)
             w1.image = errorPic  # keep a reference!
-            w1.grid(row=1, column=1)
+            w1.grid(row=1, column=1, columnspan=2, sticky=E, padx=90, pady=60)
             
-            tab_control.pack(expand=1, fill='both')
+            
             # Tab 4
             tab_control.add(tab4, text='Maintenance')
-            quitButton = Button(tab2, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
-            quitButton.grid(row=0, column=3)
+            quitButton = Button(tab4, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
+            quitButton.grid(row=0, column=2, sticky=E)
+            # Picture of Valve Chart for Maintenance page
+            pipingPic = tk.PhotoImage(file="Piping_Diagram.gif")
+            w2 = tk.Label(tab4,image=pipingPic)
+            w2.image = pipingPic  # keep a reference!
+            w2.grid(row=1, column=1, columnspan=2, sticky=E, padx=90, pady=60)
+
+            tab_control.pack(expand=1, fill='both')
             
             # Graphs
             style.use('ggplot')
-            # Temp Graph
             fig1 = plt.figure(figsize=(11, 6))
+            # Temp Graph
             ax1 = fig1.add_subplot(2, 1, 1)
-            
             # Moisture Graph
             ax2 = fig1.add_subplot(2, 1, 2)
 
