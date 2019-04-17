@@ -16,7 +16,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from queue import Queue
 
 class guiThread1(threading.Thread):
-    def __init__(self,name, threadQueue):
+
+    def __init__(self, name, threadQueue):
         threading.Thread.__init__(self)
         self.name = name
         self.guiQueue = threadQueue
@@ -31,132 +32,143 @@ class guiThread1(threading.Thread):
         messagebox.showinfo('Download Data', 'Download completed.')
     
     def fertigate(self):
-        fert_ask = Label(tab2, text="Are you sure?", font=("Helvetica",24))
-        fert_ask.grid(row=2, column=1)
-        fert_yes = Button(tab2, text="Yes", command=self.yes)
-        fert_yes.grid(row=3, column=2)
-        fert_no = Button(tab2, text="No", command=self.no)
-        fert_no.grid(row=4, column=3)
+        self.fert_ask = Label(self.tab2, text="Are you sure?", font=("Helvetica",24))
+        self.fert_ask.grid(row=2, column=1)
+        self.fert_yes = Button(self.tab2, text="Yes", command=self.yes_fertigate, height=5, width=10)
+        self.fert_yes.grid(row=3, column=1, sticky=W, padx=25, pady=25)
+        self.fert_no = Button(self.tab2, text="No", command=self.no_fertigate, height=5, width=10)
+        self.fert_no.grid(row=3, column=1, sticky=E, padx=25, pady=25)
     
     def water(self):
-        water_ask = Label(tab2, text="Are you sure?", font=("Helvetica",24))
-        water_ask.grid(row=2, column=4)
-        water_yes = Button(tab2, text="Yes", command=self.yes)
-        water_yes.grid(row=3, column=5)
-        water_no = Button(tab2, text="No", command=self.no)
-        water_no.grid(row=4, column=6)
+        self.water_ask = Label(self.tab2, text="Are you sure?", font=("Helvetica",24))
+        self.water_ask.grid(row=2, column=2)
+        self.water_yes = Button(self.tab2, text="Yes", command=self.yes_water, height=5, width=10)
+        self.water_yes.grid(row=3, column=2, sticky=W, padx=25, pady=25)
+        self.water_no = Button(self.tab2, text="No", command=self.no_water, height=5, width=10)
+        self.water_no.grid(row=3, column=2, sticky=E, padx=25, pady=25)
     
     def vent(self):
-        vent_ask = Label(tab2, text="Are you sure?", font=("Helvetica",24))
-        vent_ask.grid(row=2, column=7)
-        vent_yes = Button(tab2, text="Yes", command=self.yes)
-        vent_yes.grid(row=3, column=8)
-        vent_no = Button(tab2, text="No", command=self.no)
-        vent_no.grid(row=4, column=9)
+        self.vent_ask = Label(self.tab2, text="Are you sure?", font=("Helvetica",24))
+        self.vent_ask.grid(row=2, column=3)
+        self.vent_yes = Button(self.tab2, text="Yes", command=self.yes_vent, height=5, width=10)
+        self.vent_yes.grid(row=3, column=3, sticky=W, padx=25, pady=25)
+        self.vent_no = Button(self.tab2, text="No", command=self.no_vent, height=5, width=10)
+        self.vent_no.grid(row=3, column=3, sticky=E, padx=25, pady=25)
 
-    def yes(self):
+    def yes_fertigate(self):
+        #myqueue = send fertigate to ardunio
+        self.fert_ask.grid_forget()
+        self.fert_yes.grid_forget()
+        self.fert_no.grid_forget()
         print("yes")
 
-    def no(self):
+    def no_fertigate(self):
+        self.fert_ask.grid_forget()
+        self.fert_yes.grid_forget()
+        self.fert_no.grid_forget()
+        print("no")
+
+    def yes_water(self):
+        #myqueue = send fertigate to ardunio
+        self.water_ask.grid_forget()
+        self.water_yes.grid_forget()
+        self.water_no.grid_forget()
+        print("yes")
+
+    def no_water(self):
+        self.water_ask.grid_forget()
+        self.water_yes.grid_forget()
+        self.water_no.grid_forget()
+        print("no")
+
+    def yes_vent(self):
+        #myqueue = send fertigate to ardunio
+        self.vent_ask.grid_forget()
+        self.vent_yes.grid_forget()
+        self.vent_no.grid_forget()
+        print("yes")
+
+    def no_vent(self):
+        self.vent_ask.grid_forget()
+        self.vent_yes.grid_forget()
+        self.ventt_no.grid_forget()
         print("no")
 
     def run(self):
         while(True):
 
-            root = Tk()
-            root.title('Blackberry High Tunnel')
+            #root = Tk()
             
-            # Creation of Tabs
-            tab_control = ttk.Notebook(root)
-            tab1 = ttk.Frame(tab_control)
-            tab2 = ttk.Frame(tab_control)
-            tab3 = ttk.Frame(tab_control)
-            tab4 = ttk.Frame(tab_control)
+            #define root and tabs
+            self.root = Tk()
+            self.root.title('Blackberry High Tunnel')
+            self.tab_control = ttk.Notebook(self.root)
+            self.tab1 = ttk.Frame(self.tab_control)
+            self.tab2 = ttk.Frame(self.tab_control)
+            self.tab3 = ttk.Frame(self.tab_control)
+            self.tab4 = ttk.Frame(self.tab_control)
             
             # Tab 1
-            tab_control.add(tab1, text='Status')
+            self.tab_control.add(self.tab1, text='Status')
             # Buttons
-            quitButton = Button(tab1, text="Emergency Stop", command=self.client_exit, bg="red", fg="white", height = 5, width = 20)
+            quitButton = Button(self.tab1, text="Emergency Stop", command=self.client_exit, bg="red", fg="white", height = 5, width = 20)
             quitButton.grid(row=0, column=2, sticky=W+E+N+S)
             # Text
-            Title = Label(tab1, text="Durgin Family Farms Blackberry Hightunnel", font=("Helvetica",24))
+            Title = Label(self.tab1, text="Durgin Family Farms Blackberry Hightunnel", font=("Helvetica",24))
             Title.grid(row=0, column=1)
-            temp1w = Label(tab1, text="Current Temperature \n Inside",font=("Helvetica",12))
+            temp1w = Label(self.tab1, text="Current Temperature \n Inside",font=("Helvetica",12))
             temp1w.grid(row=2, column=2)
-            temp2w = Label(tab1, text="Current Temperature\n Outside",font=("Helvetica",12))
+            temp2w = Label(self.tab1, text="Current Temperature\n Outside",font=("Helvetica",12))
             temp2w.grid(row=4, column=2)
-            mois1w = Label(tab1,text="Row 1",font=("Helvetica",12))
+            mois1w = Label(self.tab1,text="Row 1",font=("Helvetica",12))
             mois1w.grid(row=6, column=2)
-            mois2w = Label(tab1,text="Row 2",font=("Helvetica",12))
+            mois2w = Label(self.tab1,text="Row 2",font=("Helvetica",12))
             mois2w.grid(row=8, column=2)
-            mois3w = Label(tab1,text="Row 3",font=("Helvetica",12))
+            mois3w = Label(self.tab1,text="Row 3",font=("Helvetica",12))
             mois3w.grid(row=10, column=2)
 
-
             # Tab 2
-            tab_control.add(tab2, text='Controls')
+            self.tab_control.add(self.tab2, text='Controls')
             # Buttons
-            quitButton = Button(tab2, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
-            quitButton.grid(row=0, column=3)
-            fertigateButton = Button(tab2, text = 'Fertigate', command=self.fertigate,bg="green", fg="white", height = 10, width = 20)
-            fertigateButton.grid(row=1, column=1, padx=100, pady=100)
-            fert_ask = Label(tab2, text="Are you sure?", font=("Helvetica",24))
-            fert_ask.grid(row=2, column=1)
-            #fert_ask.visible = not fert_ask.visible
-            fert_yes = Button(tab2, text="Yes", command=self.yes, height=5, width=5)
-            fert_yes.grid(row=3, column=1, sticky=W, padx=50, pady=50)
-            fert_no = Button(tab2, text="No", command=self.no, height=5, width=5)
-            fert_no.grid(row=3, column=1, sticky=E, padx=50, pady=50)
-
-            waterButton = Button(tab2, text = 'Water', command=self.water, bg="blue", fg="white", height = 10, width = 20)
-            waterButton.grid(row=1, column=2, padx=100, pady=100)
-            water_ask = Label(tab2, text="Are you sure?", font=("Helvetica",24))
-            water_ask.grid(row=2, column=2)
-            water_yes = Button(tab2, text="Yes", command=self.yes, height=5, width=5)
-            water_yes.grid(row=3, column=2, sticky=W)
-            water_no = Button(tab2, text="No", command=self.no, height=5, width=5)
-            water_no.grid(row=3, column=2, sticky=E)
-        
-            heatButton = Button(tab2, text = 'Ventilation',command=self.vent, bg="orange", fg="white", height = 10, width = 20)
-            heatButton.grid(row=1, column=3, padx=100, pady=100)
-            vent_ask = Label(tab2, text="Are you sure?", font=("Helvetica",24))
-            vent_ask.grid(row=2, column=3)
-            vent_yes = Button(tab2, text="Yes", command=self.yes, height=5, width=5)
-            vent_yes.grid(row=3, column=3, sticky=W)
-            vent_no = Button(tab2, text="No", command=self.no, height=5, width=5)
-            vent_no.grid(row=3, column=3, sticky=E)
+            quitButton = Button(self.tab2, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
+            quitButton.grid(row=0, column=3, sticky=E)
+            fertigateButton = Button(self.tab2, text = 'Fertigate', command=self.fertigate,bg="green", fg="white", height = 10, width = 20)
+            fertigateButton.grid(row=1, column=1, padx=120, pady=75)
+            waterButton = Button(self.tab2, text = 'Water', command=self.water, bg="blue", fg="white", height = 10, width = 20)
+            waterButton.grid(row=1, column=2, padx=120, pady=75)
+            ventButton = Button(self.tab2, text = 'Ventilation',command=self.vent, bg="orange", fg="white", height = 10, width = 20)
+            ventButton.grid(row=1, column=3, padx=120, pady=75)
                     
             # Tab 3
-            tab_control.add(tab3, text='Error Status')
+            self.tab_control.add(self.tab3, text='Error Status')
             # Buttons
-            quitButton = Button(tab3, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
-            quitButton.grid(row=0, column=2, sticky=E)
+            self.quitButton = Button(self.tab3, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
+            self.quitButton.grid(row=0, column=2, sticky=E)
             # Picture of Sensors for Error page
             errorPic = tk.PhotoImage(file="error.gif")
-            w1 = tk.Label(tab3,image=errorPic)
-            w1.image = errorPic  # keep a reference!
-            w1.grid(row=1, column=1, columnspan=2, sticky=E, padx=90, pady=60)
-            
+            self.w1 = tk.Label(self.tab3,image=errorPic)
+            self.w1.image = errorPic  # keep a reference!
+            self.w1.grid(row=1, column=1, columnspan=2, sticky=E, padx=90, pady=60)
             
             # Tab 4
-            tab_control.add(tab4, text='Maintenance')
-            quitButton = Button(tab4, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
-            quitButton.grid(row=0, column=2, sticky=E)
+            self.tab_control.add(self.tab4, text='Maintenance')
+            self.quitButton = Button(self.tab4, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
+            self.quitButton.grid(row=0, column=2, sticky=E)
             # Picture of Valve Chart for Maintenance page
             pipingPic = tk.PhotoImage(file="Piping_Diagram.gif")
-            w2 = tk.Label(tab4,image=pipingPic)
-            w2.image = pipingPic  # keep a reference!
-            w2.grid(row=1, column=1, columnspan=2, sticky=E, padx=90, pady=60)
+            self.w2 = tk.Label(self.tab4,image=pipingPic)
+            self.w2.image = pipingPic  # keep a reference!
+            self.w2.grid(row=1, column=1, columnspan=2, sticky=E, padx=90, pady=60)
 
-            tab_control.pack(expand=1, fill='both')
+            self.tab_control.pack(expand=1, fill='both')
             
             # Graphs
             style.use('ggplot')
-            fig1 = plt.figure(figsize=(11, 6))
+            self.fig1 = plt.figure(figsize=(11, 6))
             # Temp Graph
-            ax1 = fig1.add_subplot(2, 1, 1)
+            self.ax1 = self.fig1.add_subplot(2, 1, 1)
             # Moisture Graph
-            ax2 = fig1.add_subplot(2, 1, 2)
+            self.ax2 = self.fig1.add_subplot(2, 1, 2)
 
             # Data
             time = []
@@ -180,16 +192,16 @@ class guiThread1(threading.Thread):
                 row2_data = data2[0]
                 row3_data = data3[0]
                 # Updating Current Data Labels
-                temp1 = Label(tab1, text="%d F" % temp1_data, font=("Helvetica",24))
-                temp1.grid(row=1, column=2)
-                temp2 = Label(tab1, text="%d F" % temp2_data, font=("Helvetica",24))
-                temp2.grid(row=3, column=2)
-                mois1 = Label(tab1,text="%d" % row1_data, font=("Helvetica",24))
-                mois1.grid(row=5, column=2)
-                mois2 = Label(tab1,text="%d" % row2_data, font=("Helvetica",24))
-                mois2.grid(row=7, column=2)
-                mois3 = Label(tab1,text="%d" % row3_data, font=("Helvetica",24))
-                mois3.grid(row=9, column=2)
+                self.temp1 = Label(self.tab1, text="%d F" % temp1_data, font=("Helvetica",24))
+                self.temp1.grid(row=1, column=2)
+                self.temp2 = Label(self.tab1, text="%d F" % temp2_data, font=("Helvetica",24))
+                self.temp2.grid(row=3, column=2)
+                self.mois1 = Label(self.tab1,text="%d" % row1_data, font=("Helvetica",24))
+                self.mois1.grid(row=5, column=2)
+                self.mois2 = Label(self.tab1,text="%d" % row2_data, font=("Helvetica",24))
+                self.mois2.grid(row=7, column=2)
+                self.mois3 = Label(self.tab1,text="%d" % row3_data, font=("Helvetica",24))
+                self.mois3.grid(row=9, column=2)
                 # Append new data point to existing list
                 insideTemp.append(dataI[0])
                 outsideTemp.append(dataO[0])
@@ -205,26 +217,26 @@ class guiThread1(threading.Thread):
                 row2_plot = row2[-10:]
                 row3_plot = row3[-10:]
                 # Plot the data
-                ax1.clear()
-                ax1.plot(time_plot, insideTemp_plot, 'g', time_plot, outsideTemp_plot, 'b')
-                ax2.clear()
-                ax2.plot(time_plot, row1_plot, 'c', time_plot, row2_plot, 'm',time_plot, row3_plot, 'y')
+                self.ax1.clear()
+                self.ax1.plot(time_plot, insideTemp_plot, 'g', time_plot, outsideTemp_plot, 'b')
+                self.ax2.clear()
+                self.ax2.plot(time_plot, row1_plot, 'c', time_plot, row2_plot, 'm',time_plot, row3_plot, 'y')
                 # Configure the graphs
-                ax1.set_ylim(0, 150)
-                ax1.set_title('Temperature', fontsize=16)
-                ax1.legend(('Temp Inside','Temp Outside'), loc='upper right', shadow=True)
-                ax1.xaxis.set_tick_params(rotation=45, labelcolor='white')
-                ax2.set_ylim(0, 150)
-                ax2.set_title('Moisture', fontsize=16)
-                ax2.legend(('Row 1','Row 2','Row 3'), loc='upper right', shadow=True)
-                ax2.xaxis.set_tick_params(rotation=45)
+                self.ax1.set_ylim(0, 150)
+                self.ax1.set_title('Temperature', fontsize=16)
+                self.ax1.legend(('Temp Inside','Temp Outside'), loc='upper right', shadow=True)
+                self.ax1.xaxis.set_tick_params(rotation=45, labelcolor='white')
+                self.ax2.set_ylim(0, 150)
+                self.ax2.set_title('Moisture', fontsize=16)
+                self.ax2.legend(('Row 1','Row 2','Row 3'), loc='upper right', shadow=True)
+                self.ax2.xaxis.set_tick_params(rotation=45)
 
                 
 
-            plotcanvas1 = FigureCanvasTkAgg(fig1, tab1)
-            plotcanvas1.get_tk_widget().grid(column=1, row=1, rowspan=10)
-            ani1 = animation.FuncAnimation(fig1, animate1, fargs=(time, insideTemp, outsideTemp, row1, row2, row3),interval=3000, blit=False)
+            self.plotcanvas1 = FigureCanvasTkAgg(self.fig1, self.tab1)
+            self.plotcanvas1.get_tk_widget().grid(column=1, row=1, rowspan=10)
+            self.ani1 = animation.FuncAnimation(self.fig1, animate1, fargs=(time, insideTemp, outsideTemp, row1, row2, row3),interval=3000, blit=False)
             
            
             
-            root.mainloop()
+            self.root.mainloop()
