@@ -91,7 +91,7 @@ class guiThread1(threading.Thread):
     def no_vent(self):
         self.vent_ask.grid_forget()
         self.vent_yes.grid_forget()
-        self.ventt_no.grid_forget()
+        self.vent_no.grid_forget()
         print("no")
 
     def run(self):
