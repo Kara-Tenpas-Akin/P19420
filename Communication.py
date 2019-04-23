@@ -62,6 +62,7 @@ class commThread2(threading.Thread):
                         if Temp1Inside in data:
                             print("Inside Temp 1  Value:")
                             print(reading)
+                            self.tempI = reading
                         if Temp1Outside in data:
                             print("Outside Temp 1  Value:")
                             print(reading)
@@ -74,6 +75,7 @@ class commThread2(threading.Thread):
                         if Moist3 in data:
                             print("Moisture Row 3  Value:")
                             print(reading)
+                        self.mycom2guiQueue.put((self.tempI, self.tempO, self.row1, self.row2, self.row3))
 
                     if TxReq==1:
                         GPIO.output(23,1)

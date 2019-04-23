@@ -23,7 +23,7 @@ class guiThread1(threading.Thread):
         self.mycom2guiQueue = com2guiQueue
         self.mygui2comQueue = gui2comQueue
         print("Comm thread is initialized")
-        self.time0carlos = 0
+        self. = 0
     
     # Functions
     def client_exit(self):
@@ -247,6 +247,6 @@ class guiThread1(threading.Thread):
                 self.root.update_idletasks()
                 self.root.update()
                 #check queue here
-                #self.temp0carlos, self.temp2 = self.mycom2guiQueue.get(block=False, timeout=None)
+                self.tempI, self.tempO, self.row1, self.row2, self.row3 = self.mycom2guiQueue.get(block=False, timeout=None)
                 time.sleep(1)
             #self.root.mainloop()
