@@ -23,12 +23,43 @@ class guiThread1(threading.Thread):
         self.mycom2guiQueue = com2guiQueue
         self.mygui2comQueue = gui2comQueue
         print("Comm thread is initialized")
-        self. = 0
+        # Comm to GUI
+        self.tempIdata = 0
+        self.tempOdata = 0
+        self.row1data = 0
+        self.row2data = 0
+        self.row3data = 0
+        self.temp1Error = 0
+        self.temp2Error = 0
+        self.temp3Error = 0
+        self.temp4Error = 0
+        self.row1Error = 0
+        self.row2Error = 0
+        self.row3Error = 0
+        # GUI to Comm
+        self.eStop = 0
+        self.fertOn = 0
+        self.waterOn = 0
+        self.ventOn = 0
+        self.masterSolOn = 0
+        self.waterSolOn = 0
+        self.heatSolOn = 0
+        self.fertSolOn = 0
+        self.row1SolOn = 0
+        self.row2SolOn = 0
+        self.row3SolOn = 0
+        self.masterSolOff = 0
+        self.waterSolOff = 0
+        self.heatSolOff = 0
+        self.fertSolOff = 0
+        self.row1SolOff = 0
+        self.row2SolOff = 0
+        self.row3SolOff = 0
     
     # Functions
     def client_exit(self):
-        #queue.put("e")
-        exit()
+        #mygui2comQueue = send e-stop to ardunio
+        self.eStop = 40
     
     def download(self):
         messagebox.showinfo('Download Data', 'Download completed.')
@@ -58,43 +89,96 @@ class guiThread1(threading.Thread):
         self.vent_no.grid(row=3, column=3, sticky=E, padx=25, pady=25)
 
     def yes_fertigate(self):
-        #myqueue = send fertigate to ardunio
+        #mygui2comQueue = send fertigate to ardunio
+        self.fertOn = 30
         self.fert_ask.grid_forget()
         self.fert_yes.grid_forget()
         self.fert_no.grid_forget()
-        print("yes")
 
     def no_fertigate(self):
         self.fert_ask.grid_forget()
         self.fert_yes.grid_forget()
         self.fert_no.grid_forget()
-        print("no")
 
     def yes_water(self):
-        #myqueue = send fertigate to ardunio
+        #mygui2comQueue = send water to ardunio
+        self.waterOn = 20
         self.water_ask.grid_forget()
         self.water_yes.grid_forget()
         self.water_no.grid_forget()
-        print("yes")
 
     def no_water(self):
         self.water_ask.grid_forget()
         self.water_yes.grid_forget()
         self.water_no.grid_forget()
-        print("no")
 
     def yes_vent(self):
-        #myqueue = send fertigate to ardunio
+        #mygui2comQueue = send ventilation to ardunio
+        self.ventOn = 10
         self.vent_ask.grid_forget()
         self.vent_yes.grid_forget()
         self.vent_no.grid_forget()
-        print("yes")
 
     def no_vent(self):
         self.vent_ask.grid_forget()
         self.vent_yes.grid_forget()
         self.vent_no.grid_forget()
-        print("no")
+
+    def masterSolenoidOn(self):
+        #mygui2comQueue = send master soleniod on to ardunio
+        self.masterSolOn = 10
+
+    def waterSolenoidOn(self):
+        #mygui2comQueue = send master soleniod on to ardunio
+        self.waterSolOn = 10
+
+    def heaterSolenoidOn(self):
+        #mygui2comQueue = send master soleniod on to ardunio
+        self.heatSolOn = 10
+
+    def fertigateSolenoidOn(self):
+        #mygui2comQueue = send fertigate soleniod on to ardunio
+        self.fertSolOn = 10
+
+    def row1SolenoidOn(self):
+        #mygui2comQueue = send row 1 soleniod on to ardunio
+        self.row1SolOn = 1
+        
+    def row2SolenoidOn(self):
+        #mygui2comQueue = send row 2 soleniod on to ardunio
+        self.row2SolOn = 10
+        
+    def row3SolenoidOn(self):
+        #mygui2comQueue = send row 3 soleniod on to ardunio
+        self.row3SolOn = 10
+
+    def masterSolenoidOff(self):
+        #mygui2comQueue = send master soleniod on to ardunio
+        self.masterSolOff = 10
+
+    def waterSolenoidOff(self):
+        #mygui2comQueue = send master soleniod on to ardunio
+        self.waterSolOff = 10
+
+    def heaterSolenoidOff(self):
+        #mygui2comQueue = send master soleniod on to ardunio
+        self.heatSolOff = 10
+
+    def fertigateSolenoidOff(self):
+        #mygui2comQueue = send fertigate soleniod on to ardunio
+        self.fertSolOff = 10
+
+    def row1SolenoidOff(self):
+        #mygui2comQueue = send row 1 soleniod on to ardunio
+        self.row1SolOff = 1
+        
+    def row2SolenoidOff(self):
+        #mygui2comQueue = send row 2 soleniod on to ardunio
+        self.row2SolOff = 10
+        
+    def row3SolenoidOff(self):
+        #mygui2comQueue = send row 3 soleniod on to ardunio
+        self.row3SolOff = 10
 
     def run(self):
         while(True):
@@ -172,48 +256,47 @@ class guiThread1(threading.Thread):
             # Moisture Graph
             self.ax2 = self.fig1.add_subplot(2, 1, 2)
 
-            # Data
-            time = []
+            timeData = []
             insideTemp = []
             outsideTemp = []
-            time_rows = []
             row1 = []
             row2 = []
             row3 = []
-
-            def animate1(i, time, insideTemp, outsideTemp, row1, row2, row3):
+            
+            def animate1(i, timeData, insideTemp, outsideTemp, row1, row2, row3):
                 # Get new data point 
-                dataI = comm.getGraphData()
-                dataO = comm.getGraphData()
-                data1 = comm.getGraphData()
-                data2 = comm.getGraphData()
-                data3 = comm.getGraphData()
-                #self.temp0carlos = dataI[0]
-                temp1_data = dataI[0]
-                temp2_data = dataO[0]
-                row1_data = data1[0]
-                row2_data = data2[0]
-                row3_data = data3[0]
+                dataI = self.tempIdata
+                dataO = self.tempOdata
+                data1 = self.row1data
+                print("Should graph it")
+                print(data1)
+                data2 = self.row2data
+                data3 = self.row3data
+                #temp1_data = dataI[0]
+                #temp2_data = dataO[0]
+                #row1_data = data1[0]
+                #row2_data = data2[0]
+                #row3_data = data3[0]
                 # Updating Current Data Labels
-                self.temp1 = Label(self.tab1, text="%d F" % temp1_data, font=("Helvetica",24))
+                self.temp1 = Label(self.tab1, text="%d F" % dataI, font=("Helvetica",24))
                 self.temp1.grid(row=1, column=2)
-                self.temp2 = Label(self.tab1, text="%d F" % temp2_data, font=("Helvetica",24))
+                self.temp2 = Label(self.tab1, text="%d F" % dataO, font=("Helvetica",24))
                 self.temp2.grid(row=3, column=2)
-                self.mois1 = Label(self.tab1,text="%d" % row1_data, font=("Helvetica",24))
+                self.mois1 = Label(self.tab1,text="%d" % data1, font=("Helvetica",24))
                 self.mois1.grid(row=5, column=2)
-                self.mois2 = Label(self.tab1,text="%d" % row2_data, font=("Helvetica",24))
+                self.mois2 = Label(self.tab1,text="%d" % data2, font=("Helvetica",24))
                 self.mois2.grid(row=7, column=2)
-                self.mois3 = Label(self.tab1,text="%d" % row3_data, font=("Helvetica",24))
+                self.mois3 = Label(self.tab1,text="%d" % data3, font=("Helvetica",24))
                 self.mois3.grid(row=9, column=2)
                 # Append new data point to existing list
-                insideTemp.append(dataI[0])
-                outsideTemp.append(dataO[0])
-                row1.append(data1[0])
-                row2.append(data2[0])
-                row3.append(data3[0])
-                time.append(dt.datetime.now().strftime("%m/%d %H:%M:%S"))
+                insideTemp.append(dataI)
+                outsideTemp.append(dataO)
+                row1.append(data1)
+                row2.append(data2)
+                row3.append(data3)
+                timeData.append(dt.datetime.now().strftime("%m/%d %H:%M:%S"))
                 # Only plot last 10 data points
-                time_plot = time[-10:]
+                time_plot = timeData[-10:]
                 insideTemp_plot = insideTemp[-10:]
                 outsideTemp_plot = outsideTemp[-10:]
                 row1_plot = row1[-10:]
@@ -238,15 +321,35 @@ class guiThread1(threading.Thread):
 
             self.plotcanvas1 = FigureCanvasTkAgg(self.fig1, self.tab1)
             self.plotcanvas1.get_tk_widget().grid(column=1, row=1, rowspan=10)
-            self.ani1 = animation.FuncAnimation(self.fig1, animate1, fargs=(time, insideTemp, outsideTemp, row1, row2, row3),interval=3000, blit=False)
+            self.ani1 = animation.FuncAnimation(self.fig1, animate1, fargs=(timeData, insideTemp, outsideTemp, row1, row2, row3),interval=3000, blit=False)
             
            
-            
             import time
             while True:
                 self.root.update_idletasks()
                 self.root.update()
                 #check queue here
-                self.tempI, self.tempO, self.row1, self.row2, self.row3 = self.mycom2guiQueue.get(block=False, timeout=None)
+                try:
+                    self.tempIdata, self.tempOdata, self.row1data, self.row2data, self.row3data = self.mycom2guiQueue.get(block=False, timeout=None)
+                    print("did not pass com2guiQueue")
+                    print(self.row1data)
+                except:
+                    pass
+
+                self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+
+
                 time.sleep(1)
-            #self.root.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+                

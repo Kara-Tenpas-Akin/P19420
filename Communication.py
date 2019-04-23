@@ -31,7 +31,7 @@ junk1="0"
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(23,GPIO.OUT)
 GPIO.output(23,0)
-TxReq=1
+TxReq=0
 
 class commThread2(threading.Thread):
     def __init__(self,name, com2guiQueue, gui2comQueue):
@@ -40,6 +40,38 @@ class commThread2(threading.Thread):
         self.mycom2guiQueue = com2guiQueue
         self.mygui2comQueue = gui2comQueue
         print("Comm thread is initialized")
+        # Comm to GUI
+        self.tempIdata = 0
+        self.tempOdata = 0
+        self.row1data = 0
+        self.row2data = 0
+        self.row3data = 0
+        self.temp1Error = 0
+        self.temp2Error = 0
+        self.temp3Error = 0
+        self.temp4Error = 0
+        self.row1Error = 0
+        self.row2Error = 0
+        self.row3Error = 0
+        # GUI to Comm
+        self.eStop = 0
+        self.fertOn = 0
+        self.waterOn = 0
+        self.ventOn = 0
+        self.masterSolOn = 0
+        self.waterSolOn = 0
+        self.heatSolOn = 0
+        self.fertSolOn = 0
+        self.row1SolOn = 0
+        self.row2SolOn = 0
+        self.row3SolOn = 0
+        self.masterSolOff = 0
+        self.waterSolOff = 0
+        self.heatSolOff = 0
+        self.fertSolOff = 0
+        self.row1SolOff = 0
+        self.row2SolOff = 0
+        self.row3SolOff = 0
 
     def run(self):
         #call start() to execute non-blocking
@@ -47,11 +79,12 @@ class commThread2(threading.Thread):
            
             while(True):
                 while(True):
-					self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff, self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff = self.mygui2comQueue.get(block=False, timout=None)
-					if self.fertOn > 0:
-
+                    try:
+                        self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff = self.mygui2comQueue.get(block=False, timeout=None)
+                    except:
+                        pass
                     if TxReq==0: #Read Rx
-                        inputValue = s1.readline()
+                        inputValue = str(s1.readline())
                         print(inputValue)
                         # s = str(s1.readline())
                         # print(s)
@@ -65,27 +98,29 @@ class commThread2(threading.Thread):
                         if Temp1Inside in data:
                             print("Inside Temp 1  Value:")
                             print(reading)
-                            self.tempI = reading
+                            self.tempIdata = reading
                         if Temp1Outside in data:
                             print("Outside Temp 1  Value:")
                             print(reading)
-							self.tempO = reading
+                            self.tempOdata = reading
                         if Moist1 in data:
                             print("Moisture Row 1  Value:")
                             print(reading)
-							self.row1 = reading
+                            self.row1data = reading
                         if Moist2 in data:
                             print("Moisture Row 2  Value:")
                             print(reading)
-							self.row2 = reading
+                            self.row2data = reading
                         if Moist3 in data:
                             print("Moisture Row 3  Value:")
                             print(reading)
-							self.row3 = reading
-                        self.mycom2guiQueue.put((self.tempIdata, self.tempOdata, self.row1data, self.row2v, self.row3data))
+                            self.row3data = reading
+                            
+                        self.mycom2guiQueue.put((self.tempIdata, self.tempOdata, self.row1data, self.row2data, self.row3data))
+
 
                     #if TxReq==1:
-					if self.eStop > 0:		#eStop Send
+                    if self.eStop > 0:		#eStop Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.eStop, 'UTF-8'))
                         time.sleep(.25)
@@ -96,7 +131,7 @@ class commThread2(threading.Thread):
                             self.eStop = 0
                             print("HI")
 							
-					if self.fertOn > 0:		#fert Send
+                    if self.fertOn > 0:		#fert Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.fertOn, 'UTF-8'))
                         time.sleep(.25)
@@ -107,7 +142,7 @@ class commThread2(threading.Thread):
                             self.fertOn = 0
                             print("HI")
 					
-					if self.waterOn > 0:		# Water On Send
+                    if self.waterOn > 0:		# Water On Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.waterOn, 'UTF-8'))
                         time.sleep(.25)
@@ -118,7 +153,7 @@ class commThread2(threading.Thread):
                             self.waterOn = 0
                             print("HI")
 							
-					if self.ventOn > 0:		# Vent On Send
+                    if self.ventOn > 0:		# Vent On Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.ventOn, 'UTF-8'))
                         time.sleep(.25)
@@ -129,7 +164,7 @@ class commThread2(threading.Thread):
                             self.ventOn = 0
                             print("HI")
 							
-					if self.masterSolOn > 0:		# All Sol On Send
+                    if self.masterSolOn > 0:		# All Sol On Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.masterSolOn, 'UTF-8'))
                         time.sleep(.25)
@@ -140,7 +175,7 @@ class commThread2(threading.Thread):
                             self.masterSolOn = 0
                             print("HI")
 							
-					if self.waterSolOn > 0:		# Main Water Sol On Send
+                    if self.waterSolOn > 0:		# Main Water Sol On Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.waterSolOn, 'UTF-8'))
                         time.sleep(.25)
@@ -151,7 +186,7 @@ class commThread2(threading.Thread):
                             self.waterSolOn = 0
                             print("HI")
 							
-					if self.heatSolOn > 0:		# Heater Water Sol On Send
+                    if self.heatSolOn > 0:		# Heater Water Sol On Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.heatSolOn, 'UTF-8'))
                         time.sleep(.25)
@@ -162,7 +197,7 @@ class commThread2(threading.Thread):
                             self.heatSolOn = 0
                             print("HI")
 							
-					if self.fertSolOn > 0:		# Fert Water Sol On Send
+                    if self.fertSolOn > 0:		# Fert Water Sol On Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.fertSolOn, 'UTF-8'))
                         time.sleep(.25)
@@ -173,7 +208,7 @@ class commThread2(threading.Thread):
                             self.fertSolOn = 0
                             print("HI")
 							
-					if self.row1SolOn > 0:		# Row 1 Water Sol On Send
+                    if self.row1SolOn > 0:		# Row 1 Water Sol On Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.row1SolOn, 'UTF-8'))
                         time.sleep(.25)
@@ -184,7 +219,7 @@ class commThread2(threading.Thread):
                             self.row1SolOn = 0
                             print("HI")
 							
-					if self.row2SolOn > 0:		# Row 2 Water Sol On Send
+                    if self.row2SolOn > 0:		# Row 2 Water Sol On Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.row2SolOn, 'UTF-8'))
                         time.sleep(.25)
@@ -195,7 +230,7 @@ class commThread2(threading.Thread):
                             self.row2SolOn = 0
                             print("HI")
 							
-					if self.row3SolOn > 0:		# Row 3 Water Sol On Send
+                    if self.row3SolOn > 0:		# Row 3 Water Sol On Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.row3SolOn, 'UTF-8'))
                         time.sleep(.25)
@@ -206,7 +241,7 @@ class commThread2(threading.Thread):
                             self.row3SolOn = 0
                             print("HI")
 							
-					if self.masterSolOff > 0:		# Master Water Sol OFF Send
+                    if self.masterSolOff > 0:		# Master Water Sol OFF Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.masterSolOff, 'UTF-8'))
                         time.sleep(.25)
@@ -217,7 +252,7 @@ class commThread2(threading.Thread):
                             self.masterSolOff = 0
                             print("HI")
 							
-					if self.waterSolOff > 0:		# Water Sol OFF Send
+                    if self.waterSolOff > 0:		# Water Sol OFF Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.waterSolOff, 'UTF-8'))
                         time.sleep(.25)
@@ -228,7 +263,7 @@ class commThread2(threading.Thread):
                             self.waterSolOff = 0
                             print("HI")
 							
-					if self.heatSolOff > 0:		# Heater Sol OFF Send
+                    if self.heatSolOff > 0:		# Heater Sol OFF Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.heatSolOff, 'UTF-8'))
                         time.sleep(.25)
@@ -239,7 +274,7 @@ class commThread2(threading.Thread):
                             self.heatSolOff = 0
                             print("HI")
 							
-					if self.fertSolOff > 0:		# fert Sol OFF Send
+                    if self.fertSolOff > 0:		# fert Sol OFF Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.fertSolOff, 'UTF-8'))
                         time.sleep(.25)
@@ -250,7 +285,7 @@ class commThread2(threading.Thread):
                             self.fertSolOff = 0
                             print("HI")
 							
-					if self.row1SolOff > 0:		# Row 1 Sol OFF Send
+                    if self.row1SolOff > 0:		# Row 1 Sol OFF Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.row1SolOff, 'UTF-8'))
                         time.sleep(.25)
@@ -261,7 +296,7 @@ class commThread2(threading.Thread):
                             self.row1SolOff = 0
                             print("HI")
 							
-					if self.row2SolOff > 0:		# Row 2 Sol OFF Send
+                    if self.row2SolOff > 0:		# Row 2 Sol OFF Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.row2SolOff, 'UTF-8'))
                         time.sleep(.25)
@@ -272,7 +307,7 @@ class commThread2(threading.Thread):
                             self.row2SolOff = 0
                             print("HI")
 							
-					if self.row3SolOff > 0:		# Row 3 Sol OFF Send
+                    if self.row3SolOff > 0:		# Row 3 Sol OFF Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.row3SolOff, 'UTF-8'))
                         time.sleep(.25)
@@ -284,6 +319,3 @@ class commThread2(threading.Thread):
                             print("HI")
 
             
-    def getGraphData():
-        data = random.sample(range(0, 100), 1)
-        return data
