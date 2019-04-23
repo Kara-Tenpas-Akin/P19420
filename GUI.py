@@ -17,11 +17,13 @@ from queue import Queue
 
 class guiThread1(threading.Thread):
 
-    def __init__(self, name, threadQueue):
+    def __init__(self, name, com2guiQueue, gui2comQueue):
         threading.Thread.__init__(self)
         self.name = name
-        self.guiQueue = threadQueue
+        self.mycom2guiQueue = com2guiQueue
+        self.mygui2comQueue = gui2comQueue
         print("Comm thread is initialized")
+        self.time0carlos = 0
     
     # Functions
     def client_exit(self):
@@ -186,6 +188,7 @@ class guiThread1(threading.Thread):
                 data1 = comm.getGraphData()
                 data2 = comm.getGraphData()
                 data3 = comm.getGraphData()
+                #self.temp0carlos = dataI[0]
                 temp1_data = dataI[0]
                 temp2_data = dataO[0]
                 row1_data = data1[0]
@@ -239,4 +242,11 @@ class guiThread1(threading.Thread):
             
            
             
-            self.root.mainloop()
+            import time
+            while True:
+                self.root.update_idletasks()
+                self.root.update()
+                #check queue here
+                #self.temp0carlos, self.temp2 = self.mycom2guiQueue.get(block=False, timeout=None)
+                time.sleep(1)
+            #self.root.mainloop()
