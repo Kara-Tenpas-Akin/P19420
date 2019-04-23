@@ -47,6 +47,9 @@ class commThread2(threading.Thread):
            
             while(True):
                 while(True):
+					self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff, self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff = self.mygui2comQueue.get(block=False, timout=None)
+					if self.fertOn > 0:
+
                     if TxReq==0: #Read Rx
                         inputValue = s1.readline()
                         print(inputValue)
@@ -66,27 +69,218 @@ class commThread2(threading.Thread):
                         if Temp1Outside in data:
                             print("Outside Temp 1  Value:")
                             print(reading)
+							self.tempO = reading
                         if Moist1 in data:
                             print("Moisture Row 1  Value:")
                             print(reading)
+							self.row1 = reading
                         if Moist2 in data:
                             print("Moisture Row 2  Value:")
                             print(reading)
+							self.row2 = reading
                         if Moist3 in data:
                             print("Moisture Row 3  Value:")
                             print(reading)
-                        self.mycom2guiQueue.put((self.tempI, self.tempO, self.row1, self.row2, self.row3))
+							self.row3 = reading
+                        self.mycom2guiQueue.put((self.tempIdata, self.tempOdata, self.row1data, self.row2v, self.row3data))
 
-                    if TxReq==1:
+                    #if TxReq==1:
+					if self.eStop > 0:		#eStop Send
                         GPIO.output(23,1)
-                        test = "data"
-                        s1.write(bytes('%d' % 20, 'UTF-8'))
+                        s1.write(bytes('%d' % self.eStop, 'UTF-8'))
                         time.sleep(.25)
                         inputValue = str(s1.readline())
                         print(inputValue)
                         if "!!!" in inputValue:
-                            #GPIO.output(23,0)
-                            #TxReq = 0
+                            GPIO.output(23,0)
+                            self.eStop = 0
+                            print("HI")
+							
+					if self.fertOn > 0:		#fert Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.fertOn, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.fertOn = 0
+                            print("HI")
+					
+					if self.waterOn > 0:		# Water On Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.waterOn, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.waterOn = 0
+                            print("HI")
+							
+					if self.ventOn > 0:		# Vent On Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.ventOn, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.ventOn = 0
+                            print("HI")
+							
+					if self.masterSolOn > 0:		# All Sol On Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.masterSolOn, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.masterSolOn = 0
+                            print("HI")
+							
+					if self.waterSolOn > 0:		# Main Water Sol On Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.waterSolOn, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.waterSolOn = 0
+                            print("HI")
+							
+					if self.heatSolOn > 0:		# Heater Water Sol On Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.heatSolOn, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.heatSolOn = 0
+                            print("HI")
+							
+					if self.fertSolOn > 0:		# Fert Water Sol On Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.fertSolOn, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.fertSolOn = 0
+                            print("HI")
+							
+					if self.row1SolOn > 0:		# Row 1 Water Sol On Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.row1SolOn, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.row1SolOn = 0
+                            print("HI")
+							
+					if self.row2SolOn > 0:		# Row 2 Water Sol On Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.row2SolOn, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.row2SolOn = 0
+                            print("HI")
+							
+					if self.row3SolOn > 0:		# Row 3 Water Sol On Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.row3SolOn, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.row3SolOn = 0
+                            print("HI")
+							
+					if self.masterSolOff > 0:		# Master Water Sol OFF Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.masterSolOff, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.masterSolOff = 0
+                            print("HI")
+							
+					if self.waterSolOff > 0:		# Water Sol OFF Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.waterSolOff, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.waterSolOff = 0
+                            print("HI")
+							
+					if self.heatSolOff > 0:		# Heater Sol OFF Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.heatSolOff, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.heatSolOff = 0
+                            print("HI")
+							
+					if self.fertSolOff > 0:		# fert Sol OFF Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.fertSolOff, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.fertSolOff = 0
+                            print("HI")
+							
+					if self.row1SolOff > 0:		# Row 1 Sol OFF Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.row1SolOff, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.row1SolOff = 0
+                            print("HI")
+							
+					if self.row2SolOff > 0:		# Row 2 Sol OFF Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.row2SolOff, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.row2SolOff = 0
+                            print("HI")
+							
+					if self.row3SolOff > 0:		# Row 3 Sol OFF Send
+                        GPIO.output(23,1)
+                        s1.write(bytes('%d' % self.row3SolOff, 'UTF-8'))
+                        time.sleep(.25)
+                        inputValue = str(s1.readline())
+                        print(inputValue)
+                        if "!!!" in inputValue:
+                            GPIO.output(23,0)
+                            self.row3SolOff = 0
                             print("HI")
 
             
