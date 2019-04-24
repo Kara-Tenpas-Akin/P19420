@@ -60,6 +60,10 @@ class guiThread1(threading.Thread):
     def client_exit(self):
         #mygui2comQueue = send e-stop to ardunio
         self.eStop = 40
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.eStop = 0
+        #TODO: why make variables = to these values and then back to zero perhaps just send the message?
+        #TODO: can we use a "key = value" message structure similar to JSON?
     
     def download(self):
         messagebox.showinfo('Download Data', 'Download completed.')
@@ -94,6 +98,8 @@ class guiThread1(threading.Thread):
         self.fert_ask.grid_forget()
         self.fert_yes.grid_forget()
         self.fert_no.grid_forget()
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.fertOn = 0
 
     def no_fertigate(self):
         self.fert_ask.grid_forget()
@@ -106,6 +112,8 @@ class guiThread1(threading.Thread):
         self.water_ask.grid_forget()
         self.water_yes.grid_forget()
         self.water_no.grid_forget()
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.waterOn = 0
 
     def no_water(self):
         self.water_ask.grid_forget()
@@ -118,6 +126,8 @@ class guiThread1(threading.Thread):
         self.vent_ask.grid_forget()
         self.vent_yes.grid_forget()
         self.vent_no.grid_forget()
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.ventOn = 0
 
     def no_vent(self):
         self.vent_ask.grid_forget()
@@ -127,58 +137,86 @@ class guiThread1(threading.Thread):
     def masterSolenoidOn(self):
         #mygui2comQueue = send master soleniod on to ardunio
         self.masterSolOn = 10
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.masterSolOn = 0
 
     def waterSolenoidOn(self):
         #mygui2comQueue = send master soleniod on to ardunio
         self.waterSolOn = 10
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.waterSolOn = 0
 
     def heaterSolenoidOn(self):
         #mygui2comQueue = send master soleniod on to ardunio
         self.heatSolOn = 10
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.heatSolOn = 0
 
     def fertigateSolenoidOn(self):
         #mygui2comQueue = send fertigate soleniod on to ardunio
         self.fertSolOn = 10
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.fertSolOn = 0
 
     def row1SolenoidOn(self):
         #mygui2comQueue = send row 1 soleniod on to ardunio
         self.row1SolOn = 1
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.row1SolOn = 0
         
     def row2SolenoidOn(self):
         #mygui2comQueue = send row 2 soleniod on to ardunio
         self.row2SolOn = 10
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.row2SolOn = 0
         
     def row3SolenoidOn(self):
         #mygui2comQueue = send row 3 soleniod on to ardunio
         self.row3SolOn = 10
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.row3SolOn = 0
 
     def masterSolenoidOff(self):
         #mygui2comQueue = send master soleniod on to ardunio
         self.masterSolOff = 10
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.masterSolOff = 0
 
     def waterSolenoidOff(self):
         #mygui2comQueue = send master soleniod on to ardunio
         self.waterSolOff = 10
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.waterSolOff = 0
 
     def heaterSolenoidOff(self):
         #mygui2comQueue = send master soleniod on to ardunio
         self.heatSolOff = 10
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.heatSolOff = 0
 
     def fertigateSolenoidOff(self):
         #mygui2comQueue = send fertigate soleniod on to ardunio
         self.fertSolOff = 10
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.fertSolOff = 0
 
     def row1SolenoidOff(self):
         #mygui2comQueue = send row 1 soleniod on to ardunio
         self.row1SolOff = 1
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.row1SolOff = 0
         
     def row2SolenoidOff(self):
         #mygui2comQueue = send row 2 soleniod on to ardunio
         self.row2SolOff = 10
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.row2SolOff = 0
         
     def row3SolenoidOff(self):
         #mygui2comQueue = send row 3 soleniod on to ardunio
         self.row3SolOff = 10
+        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+        self.row3SolOff = 0
 
     def run(self):
         while(True):
@@ -360,12 +398,11 @@ class guiThread1(threading.Thread):
                 #check queue here
                 try:
                     self.tempIdata, self.tempOdata, self.row1data, self.row2data, self.row3data = self.mycom2guiQueue.get(block=False, timeout=None)
-                    print("did not pass com2guiQueue")
-                    print(self.row1data)
+                    #print(self.row1data)
                 except:
                     pass
 
-                self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
+                #self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
 
 
                 time.sleep(1)

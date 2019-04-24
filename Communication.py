@@ -79,10 +79,12 @@ class commThread2(threading.Thread):
            
             while(True):
                 while(True):
+
                     try:
                         self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff = self.mygui2comQueue.get(block=False, timeout=None)
                     except:
                         pass
+
                     if TxReq==0: #Read Rx
                         inputValue = str(s1.readline())
                         print(inputValue)
@@ -116,11 +118,17 @@ class commThread2(threading.Thread):
                             print(reading)
                             self.row3data = reading
                             
+                        #self.tempIdata = 2 #testing
+                        #self.tempOdata = 3 #testing
+                        #self.row1data = 4 #testing
+                        #self.row2data = 5 #testing
+                        #self.row3data = 6 #testing
                         self.mycom2guiQueue.put((self.tempIdata, self.tempOdata, self.row1data, self.row2data, self.row3data))
 
 
                     #if TxReq==1:
-                    if self.eStop > 0:		#eStop Send
+                    if self.eStop > 0:        #eStop Send
+                        print("eStop was received from GUI")
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.eStop, 'UTF-8'))
                         time.sleep(.25)
@@ -130,8 +138,8 @@ class commThread2(threading.Thread):
                             GPIO.output(23,0)
                             self.eStop = 0
                             print("HI")
-							
-                    if self.fertOn > 0:		#fert Send
+                            
+                    if self.fertOn > 0:        #fert Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.fertOn, 'UTF-8'))
                         time.sleep(.25)
@@ -141,8 +149,8 @@ class commThread2(threading.Thread):
                             GPIO.output(23,0)
                             self.fertOn = 0
                             print("HI")
-					
-                    if self.waterOn > 0:		# Water On Send
+                    
+                    if self.waterOn > 0:    	# Water On Send
                         GPIO.output(23,1)
                         s1.write(bytes('%d' % self.waterOn, 'UTF-8'))
                         time.sleep(.25)
@@ -318,4 +326,4 @@ class commThread2(threading.Thread):
                             self.row3SolOff = 0
                             print("HI")
 
-            
+                    time.sleep(1)
