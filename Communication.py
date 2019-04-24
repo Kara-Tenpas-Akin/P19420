@@ -23,6 +23,12 @@ MLvl1=0
 MLvl2=0
 MLvl3=0
 
+ErrR1="01-03-01"
+ErrR2="01-03-02"
+ErrR3="01-03-03"
+ErrIn="01-03-04"
+ErrOut="01-03-05"
+
 s="1"
 data="0"
 space="0"
@@ -81,7 +87,8 @@ class commThread2(threading.Thread):
                 while(True):
 
                     try:
-                        self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff = self.mygui2comQueue.get(block=False, timeout=None)
+                        #self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff = self.mygui2comQueue.get(block=False, timeout=None)
+                        message = self.mygui2comQueue.get(block=False, timeout=None)
                     except:
                         pass
 
@@ -117,13 +124,35 @@ class commThread2(threading.Thread):
                             print("Moisture Row 3  Value:")
                             print(reading)
                             self.row3data = reading
+                        if ErrR1 in data:
+                            print("Moisture Row 1  Error")
+                            #print(reading)
+                            self.row1Error = 1
+                        if ErrR2 in data:
+                            print("Moisture Row 2  Error")
+                            #print(reading)
+                            self.row2Error = 1
+                        if ErrR3 in data:
+                            print("Moisture Row 3  Error")
+                            #print(reading)
+                            self.row3Error = 1
+                        if ErrIn in data:
+                            print("Inside Temp Error")
+                            #print(reading)
+                            self.temp1Error = 1
+                            self.temp2Error = 1
+                        if ErrOut in data:
+                            print("Outside Temp 2 Error")
+                            #print(reading)
+                            self.temp3Error = 1
+                            self.temp4Error = 1
                             
                         #self.tempIdata = 2 #testing
                         #self.tempOdata = 3 #testing
                         #self.row1data = 4 #testing
                         #self.row2data = 5 #testing
                         #self.row3data = 6 #testing
-                        self.mycom2guiQueue.put((self.tempIdata, self.tempOdata, self.row1data, self.row2data, self.row3data))
+                        self.mycom2guiQueue.put((self.tempIdata, self.tempOdata, self.row1data, self.row2data, self.row3data, self.temp1Error, self.temp2Error, self.temp3Error, self.temp4Error, self.row1Error, self.row2Error, self.row3Error))
 
 
                     #if TxReq==1:
