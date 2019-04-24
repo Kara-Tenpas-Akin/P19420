@@ -36,34 +36,11 @@ class guiThread1(threading.Thread):
         self.row1Error = 0
         self.row2Error = 0
         self.row3Error = 0
-        # GUI to Comm
-        self.eStop = 0
-        self.fertOn = 0
-        self.waterOn = 0
-        self.ventOn = 0
-        self.masterSolOn = 0
-        self.waterSolOn = 0
-        self.heatSolOn = 0
-        self.fertSolOn = 0
-        self.row1SolOn = 0
-        self.row2SolOn = 0
-        self.row3SolOn = 0
-        self.masterSolOff = 0
-        self.waterSolOff = 0
-        self.heatSolOff = 0
-        self.fertSolOff = 0
-        self.row1SolOff = 0
-        self.row2SolOff = 0
-        self.row3SolOff = 0
     
     # Functions
     def client_exit(self):
-        #mygui2comQueue = send e-stop to ardunio
-        self.eStop = 40
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.eStop = 0
-        #TODO: why make variables = to these values and then back to zero perhaps just send the message?
-        #TODO: can we use a "key = value" message structure similar to JSON?
+        #mygui2comQueue = send e-stop to arduino
+        self.mygui2comQueue.put("eStop")
     
     def download(self):
         messagebox.showinfo('Download Data', 'Download completed.')
@@ -93,13 +70,10 @@ class guiThread1(threading.Thread):
         self.vent_no.grid(row=3, column=3, sticky=E, padx=25, pady=25)
 
     def yes_fertigate(self):
-        #mygui2comQueue = send fertigate to ardunio
-        #self.fertOn = 30
         self.fert_ask.grid_forget()
         self.fert_yes.grid_forget()
         self.fert_no.grid_forget()
-        #self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        #self.fertOn = 0
+        #mygui2comQueue = send fertigate to ardunio
         self.mygui2comQueue.put("fertOn")
 
     def no_fertigate(self):
@@ -108,13 +82,11 @@ class guiThread1(threading.Thread):
         self.fert_no.grid_forget()
 
     def yes_water(self):
-        #mygui2comQueue = send water to ardunio
-        self.waterOn = 20
         self.water_ask.grid_forget()
         self.water_yes.grid_forget()
         self.water_no.grid_forget()
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.waterOn = 0
+        #mygui2comQueue = send water to ardunio
+        self.mygui2comQueue.put("waterOn")
 
     def no_water(self):
         self.water_ask.grid_forget()
@@ -123,101 +95,76 @@ class guiThread1(threading.Thread):
 
     def yes_vent(self):
         #mygui2comQueue = send ventilation to ardunio
-        self.ventOn = 10
         self.vent_ask.grid_forget()
         self.vent_yes.grid_forget()
         self.vent_no.grid_forget()
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.ventOn = 0
+        #mygui2comQueue = send ventilation to ardunio
+        self.mygui2comQueue.put("ventOn")
 
     def no_vent(self):
         self.vent_ask.grid_forget()
         self.vent_yes.grid_forget()
         self.vent_no.grid_forget()
 
+    def automateAllSol(self):
+        #mygui2comQueue = send command to re-automate system to ardunio
+        self.mygui2comQueue.put("automateAll")    
+
     def masterSolenoidOn(self):
         #mygui2comQueue = send master soleniod on to arduino
-        self.masterSolOn = 21
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.masterSolOn = 0
+        self.mygui2comQueue.put("masterSolOn")
 
     def waterSolenoidOn(self):
-        #mygui2comQueue = send master soleniod on to arduino
-        self.waterSolOn = 22
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.waterSolOn = 0
+        #mygui2comQueue = send water soleniod on to arduino
+        self.mygui2comQueue.put("waterSolOn")
 
     def heaterSolenoidOn(self):
-        #mygui2comQueue = send master soleniod on to arduino
-        self.heatSolOn = 23
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.heatSolOn = 0
+        #mygui2comQueue = send heater soleniod on to arduino
+        self.mygui2comQueue.put("heatSolOn")
 
     def fertigateSolenoidOn(self):
         #mygui2comQueue = send fertigate soleniod on to arduino
-        self.fertSolOn = 24
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.fertSolOn = 0
+        self.mygui2comQueue.put("fertSolOn")
 
     def row1SolenoidOn(self):
         #mygui2comQueue = send row 1 soleniod on to arduino
-        self.row1SolOn = 25
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.row1SolOn = 0
-        
+        self.mygui2comQueue.put("row1SolOn")
+
     def row2SolenoidOn(self):
         #mygui2comQueue = send row 2 soleniod on to arduino
-        self.row2SolOn = 26
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.row2SolOn = 0
+        self.mygui2comQueue.put("row2SolOn")
         
     def row3SolenoidOn(self):
         #mygui2comQueue = send row 3 soleniod on to arduino
-        self.row3SolOn = 27
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.row3SolOn = 0
+        self.mygui2comQueue.put("row3SolOn")
 
     def masterSolenoidOff(self):
-        #mygui2comQueue = send master soleniod on to arduino
-        self.masterSolOff = 51
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.masterSolOff = 0
+        #mygui2comQueue = send master soleniod off to arduino
+        self.mygui2comQueue.put("masterSolOff")
 
     def waterSolenoidOff(self):
-        #mygui2comQueue = send master soleniod on to arduino
-        self.waterSolOff = 52
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.waterSolOff = 0
+        #mygui2comQueue = send water soleniod off to arduino
+        self.mygui2comQueue.put("waterSolOff")
 
     def heaterSolenoidOff(self):
-        #mygui2comQueue = send master soleniod on to arduino
-        self.heatSolOff = 53
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.heatSolOff = 0
+        #mygui2comQueue = send heater soleniod off to arduino
+        self.mygui2comQueue.put("heatSolOff")
 
     def fertigateSolenoidOff(self):
-        #mygui2comQueue = send fertigate soleniod on to arduino
-        self.fertSolOff = 54
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.fertSolOff = 0
+        #mygui2comQueue = send fertigate soleniod off to arduino
+        self.mygui2comQueue.put("fertSolOff")
 
     def row1SolenoidOff(self):
-        #mygui2comQueue = send row 1 soleniod on to arduino
-        self.row1SolOff = 55
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.row1SolOff = 0
+        #mygui2comQueue = send row 1 soleniod off to arduino
+        self.mygui2comQueue.put("row1SolOff")
         
     def row2SolenoidOff(self):
-        #mygui2comQueue = send row 2 soleniod on to arduino
-        self.row2SolOff = 56
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.row2SolOff = 0
+        #mygui2comQueue = send row 2 soleniod off to arduino
+        self.mygui2comQueue.put("row2SolOff")
         
     def row3SolenoidOff(self):
-        #mygui2comQueue = send row 3 soleniod on to arduino
-        self.row3SolOff = 57
-        self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-        self.row3SolOff = 0
+        #mygui2comQueue = send row 3 soleniod off to arduino
+        self.mygui2comQueue.put("row3SolOff")
 
     def run(self):
         while(True):
@@ -274,7 +221,7 @@ class guiThread1(threading.Thread):
             errorPic = tk.PhotoImage(file="error.gif")
             self.w1 = tk.Label(self.tab3,image=errorPic)
             self.w1.image = errorPic  # keep a reference!
-            self.w1.grid(row=1, column=1, columnspan=2, sticky=E, padx=90, pady=60)
+            self.w1.grid(row=4, column=1, columnspan=2, sticky=E, padx=90)
             
             # Tab 4
             self.tab_control.add(self.tab4, text='Maintenance')
@@ -286,6 +233,8 @@ class guiThread1(threading.Thread):
             self.w2.image = pipingPic  # keep a reference!
             self.w2.grid(row=3, column=0, columnspan=8, sticky=N)
             # Buttons
+            self.automateAllValves = Button(self.tab4, text="Set all Valves back to Automatic", command=self.automateAllSol, height=5, width=30)
+            self.automateAllValves.grid(row=0, column=0, columnspan=8, sticky=N)
             self.masterValveOn= Button(self.tab4, text="Master Valve ON", command=self.masterSolenoidOn, height=5, width=19)
             self.masterValveOn.grid(row=1, column=1)
             self.masterValveOn= Button(self.tab4, text="Master Valve OFF", command=self.masterSolenoidOff, height=5, width=19)
@@ -377,11 +326,11 @@ class guiThread1(threading.Thread):
                 self.ax2.clear()
                 self.ax2.plot(time_plot, row1_plot, 'c', time_plot, row2_plot, 'm',time_plot, row3_plot, 'y')
                 # Configure the graphs
-                self.ax1.set_ylim(0, 150)
+                self.ax1.set_ylim(0, 120)
                 self.ax1.set_title('Temperature', fontsize=16)
                 self.ax1.legend(('Temp Inside','Temp Outside'), loc='upper right', shadow=True)
                 self.ax1.xaxis.set_tick_params(rotation=45, labelcolor='white')
-                self.ax2.set_ylim(0, 150)
+                self.ax2.set_ylim(0, 1000)
                 self.ax2.set_title('Moisture', fontsize=16)
                 self.ax2.legend(('Row 1','Row 2','Row 3'), loc='upper right', shadow=True)
                 self.ax2.xaxis.set_tick_params(rotation=45)
@@ -397,16 +346,55 @@ class guiThread1(threading.Thread):
             while True:
                 self.root.update_idletasks()
                 self.root.update()
-                #check queue here
+                # Check queue here
                 try:
                     self.tempIdata, self.tempOdata, self.row1data, self.row2data, self.row3data, self.temp1Error, self.temp2Error, self.temp3Error, self.temp4Error, self.row1Error, self.row2Error, self.row3Error = self.mycom2guiQueue.get(block=False, timeout=None)
-                    #print(self.row1data)
                 except:
                     pass
-
-                #self.mygui2comQueue.put((self.eStop, self.fertOn, self.waterOn, self.ventOn, self.masterSolOn, self.waterSolOn, self.heatSolOn, self.fertSolOn, self.row1SolOn, self.row2SolOn, self.row3SolOn, self.masterSolOff,self.waterSolOff, self.heatSolOff, self.fertSolOff, self.row1SolOff, self.row2SolOff, self.row3SolOff))
-
-
+                # Error handling
+                if self.temp1Error == 1:
+                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensor Error", font=("Helvetica",24), fg='red')
+                    self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
+                if self.temp2Error == 1: 
+                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensor Error", font=("Helvetica",24), fg='red')
+                    self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
+                if self.temp3Error == 1: 
+                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensor Error", font=("Helvetica",24), fg='red')
+                    self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
+                if self.temp4Error == 1: 
+                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensor Error", font=("Helvetica",24), fg='red')
+                    self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
+                if self.row1Error == 1: 
+                    self.row1ErrorLabel = Label(self.tab3, text="Row 1 Moisture Sensor Error", font=("Helvetica",24), fg='red')
+                    self.row1ErrorLabel.grid(row=1, column=1)
+                if self.row2Error == 1: 
+                    self.row2ErrorLabel = Label(self.tab3, text="Row 2 Moisture Sensor Error", font=("Helvetica",24), fg='red')
+                    self.row2ErrorLabel.grid(row=2, column=1)
+                if self.row3Error == 1: 
+                    self.row3ErrorLabel = Label(self.tab3, text="Row 3 Moisture Sensor Error", font=("Helvetica",24), fg='red')
+                    self.row3ErrorLabel.grid(row=3, column=1)
+                # Error Clearing
+                if self.temp1Error == 0:
+                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensors Good", font=("Helvetica",24), fg='green')
+                    self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
+                if self.temp2Error == 0: 
+                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensors Good", font=("Helvetica",24), fg='green')
+                    self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
+                if self.temp3Error == 0: 
+                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensors Good", font=("Helvetica",24), fg='green')
+                    self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
+                if self.temp4Error == 0: 
+                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensors Good", font=("Helvetica",24), fg='green')
+                    self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
+                if self.row1Error == 0: 
+                    self.row1ErrorLabel = Label(self.tab3, text="Row 1 Moisture Sensor Good", font=("Helvetica",24), fg='green')
+                    self.row1ErrorLabel.grid(row=1, column=1)
+                if self.row2Error == 0: 
+                    self.row2ErrorLabel = Label(self.tab3, text="Row 2 Moisture Sensor Good", font=("Helvetica",24), fg='green')
+                    self.row2ErrorLabel.grid(row=2, column=1)
+                if self.row3Error == 0: 
+                    self.row3ErrorLabel = Label(self.tab3, text="Row 3 Moisture Sensor Good", font=("Helvetica",24), fg='green')
+                    self.row3ErrorLabel.grid(row=3, column=1)
                 time.sleep(1)
 
 
