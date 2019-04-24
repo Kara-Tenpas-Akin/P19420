@@ -1,8 +1,6 @@
+#!/usr/bin/env python3
 # Main File
 # Run GUI.py and Communition.py
-
-#!/usr/bin/env python3
-
 from threading import Timer
 from GUI import guiThread1
 from Communication import commThread2

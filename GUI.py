@@ -239,13 +239,42 @@ class guiThread1(threading.Thread):
             # Tab 4
             self.tab_control.add(self.tab4, text='Maintenance')
             self.quitButton = Button(self.tab4, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
-            self.quitButton.grid(row=0, column=2, sticky=E)
+            self.quitButton.grid(row=0, column=0, columnspan=8, sticky=E)
             # Picture of Valve Chart for Maintenance page
             pipingPic = tk.PhotoImage(file="Piping_Diagram.gif")
             self.w2 = tk.Label(self.tab4,image=pipingPic)
             self.w2.image = pipingPic  # keep a reference!
-            self.w2.grid(row=1, column=1, columnspan=2, sticky=E, padx=90, pady=60)
-
+            self.w2.grid(row=3, column=0, columnspan=8, sticky=N)
+            # Buttons
+            self.masterValveOn= Button(self.tab4, text="Master Valve ON", command=self.masterSolenoidOn, height=5, width=19)
+            self.masterValveOn.grid(row=1, column=1)
+            self.masterValveOn= Button(self.tab4, text="Master Valve OFF", command=self.masterSolenoidOff, height=5, width=19)
+            self.masterValveOn.grid(row=2, column=1)
+            self.masterValveOn= Button(self.tab4, text="Heater Valve ON", command=self.heaterSolenoidOn, height=5, width=19)
+            self.masterValveOn.grid(row=1, column=2)
+            self.masterValveOn= Button(self.tab4, text="Heater Valve OFF", command=self.heaterSolenoidOff, height=5, width=19)
+            self.masterValveOn.grid(row=2, column=2)
+            self.masterValveOn= Button(self.tab4, text="Water Valve ON", command=self.waterSolenoidOff, height=5, width=19)
+            self.masterValveOn.grid(row=1, column=3)
+            self.masterValveOn= Button(self.tab4, text="Water Valve OFF", command=self.waterSolenoidOff, height=5, width=19)
+            self.masterValveOn.grid(row=2, column=3)
+            self.masterValveOn= Button(self.tab4, text="Fertigate Valve ON", command=self.fertigateSolenoidOn, height=5, width=20)
+            self.masterValveOn.grid(row=1, column=4)
+            self.masterValveOn= Button(self.tab4, text="Fertigate Valve OFF", command=self.fertigateSolenoidOff, height=5, width=20)
+            self.masterValveOn.grid(row=2, column=4)
+            self.masterValveOn= Button(self.tab4, text="Row 1 Valve ON", command=self.row1SolenoidOn, height=5, width=19)
+            self.masterValveOn.grid(row=1, column=5)
+            self.masterValveOn= Button(self.tab4, text="Row 1 Valve OFF", command=self.row1SolenoidOff, height=5, width=19)
+            self.masterValveOn.grid(row=2, column=5)
+            self.masterValveOn= Button(self.tab4, text="Row 2 Valve ON", command=self.row2SolenoidOn, height=5, width=19)
+            self.masterValveOn.grid(row=1, column=6)
+            self.masterValveOn= Button(self.tab4, text="Row 2 Valve OFF", command=self.row2SolenoidOff, height=5, width=19)
+            self.masterValveOn.grid(row=2, column=6)
+            self.masterValveOn= Button(self.tab4, text="Row 3 Valve ON", command=self.row3SolenoidOn, height=5, width=20)
+            self.masterValveOn.grid(row=1, column=7)
+            self.masterValveOn= Button(self.tab4, text="Row 3 Valve OFF", command=self.row3SolenoidOff, height=5, width=20)
+            self.masterValveOn.grid(row=2, column=7)
+            
             self.tab_control.pack(expand=1, fill='both')
             
             # Graphs
