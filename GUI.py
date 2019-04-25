@@ -41,6 +41,7 @@ class guiThread1(threading.Thread):
     def client_exit(self):
         #mygui2comQueue = send e-stop to arduino
         self.mygui2comQueue.put("eStop")
+        restartArduino = messagebox.showerror("Emergency Stop", "Please Reset Arduino")
     
     def download(self):
         messagebox.showinfo('Download Data', 'Download completed.')
@@ -281,65 +282,10 @@ class guiThread1(threading.Thread):
             row2 = []
             row3 = []
             
-            def animate1(i, timeData, insideTemp, outsideTemp, row1, row2, row3):
-                # Get new data point 
-                dataI = self.tempIdata
-                dataO = self.tempOdata
-                data1 = self.row1data
-                print("Should graph it")
-                print(data1)
-                data2 = self.row2data
-                data3 = self.row3data
-                #temp1_data = dataI[0]
-                #temp2_data = dataO[0]
-                #row1_data = data1[0]
-                #row2_data = data2[0]
-                #row3_data = data3[0]
-                # Updating Current Data Labels
-                self.temp1 = Label(self.tab1, text="%d F" % dataI, font=("Helvetica",24))
-                self.temp1.grid(row=1, column=2)
-                self.temp2 = Label(self.tab1, text="%d F" % dataO, font=("Helvetica",24))
-                self.temp2.grid(row=3, column=2)
-                self.mois1 = Label(self.tab1,text="%d" % data1, font=("Helvetica",24))
-                self.mois1.grid(row=5, column=2)
-                self.mois2 = Label(self.tab1,text="%d" % data2, font=("Helvetica",24))
-                self.mois2.grid(row=7, column=2)
-                self.mois3 = Label(self.tab1,text="%d" % data3, font=("Helvetica",24))
-                self.mois3.grid(row=9, column=2)
-                # Append new data point to existing list
-                insideTemp.append(dataI)
-                outsideTemp.append(dataO)
-                row1.append(data1)
-                row2.append(data2)
-                row3.append(data3)
-                timeData.append(dt.datetime.now().strftime("%m/%d %H:%M:%S"))
-                # Only plot last 10 data points
-                time_plot = timeData[-10:]
-                insideTemp_plot = insideTemp[-10:]
-                outsideTemp_plot = outsideTemp[-10:]
-                row1_plot = row1[-10:]
-                row2_plot = row2[-10:]
-                row3_plot = row3[-10:]
-                # Plot the data
-                self.ax1.clear()
-                self.ax1.plot(time_plot, insideTemp_plot, 'g', time_plot, outsideTemp_plot, 'b')
-                self.ax2.clear()
-                self.ax2.plot(time_plot, row1_plot, 'c', time_plot, row2_plot, 'm',time_plot, row3_plot, 'y')
-                # Configure the graphs
-                self.ax1.set_ylim(0, 120)
-                self.ax1.set_title('Temperature', fontsize=16)
-                self.ax1.legend(('Temp Inside','Temp Outside'), loc='upper right', shadow=True)
-                self.ax1.xaxis.set_tick_params(rotation=45, labelcolor='white')
-                self.ax2.set_ylim(0, 1000)
-                self.ax2.set_title('Moisture', fontsize=16)
-                self.ax2.legend(('Row 1','Row 2','Row 3'), loc='upper right', shadow=True)
-                self.ax2.xaxis.set_tick_params(rotation=45)
-
-                
 
             self.plotcanvas1 = FigureCanvasTkAgg(self.fig1, self.tab1)
             self.plotcanvas1.get_tk_widget().grid(column=1, row=1, rowspan=10)
-            self.ani1 = animation.FuncAnimation(self.fig1, animate1, fargs=(timeData, insideTemp, outsideTemp, row1, row2, row3),interval=3000, blit=False)
+            self.ani1 = animation.FuncAnimation(self.fig1, self.animate1, fargs=(timeData, insideTemp, outsideTemp, row1, row2, row3),interval=3000, blit=False)
             
            
             import time
@@ -349,20 +295,23 @@ class guiThread1(threading.Thread):
                 # Check queue here
                 try:
                     self.tempIdata, self.tempOdata, self.row1data, self.row2data, self.row3data, self.temp1Error, self.temp2Error, self.temp3Error, self.temp4Error, self.row1Error, self.row2Error, self.row3Error = self.mycom2guiQueue.get(block=False, timeout=None)
+                    print(".")
                 except:
-                    pass
+                    print("*")
+                    time.sleep(1)
+                    #pass
                 # Error handling
                 if self.temp1Error == 1:
-                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensor Error", font=("Helvetica",24), fg='red')
+                    self.tempErrorLabel = Label(self.tab3, text="  Temperature Sensor Error  ", font=("Helvetica",24), fg='red')
                     self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
                 if self.temp2Error == 1: 
-                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensor Error", font=("Helvetica",24), fg='red')
+                    self.tempErrorLabel = Label(self.tab3, text="  Temperature Sensor Error  ", font=("Helvetica",24), fg='red')
                     self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
                 if self.temp3Error == 1: 
-                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensor Error", font=("Helvetica",24), fg='red')
+                    self.tempErrorLabel = Label(self.tab3, text="  Temperature Sensor Error"  , font=("Helvetica",24), fg='red')
                     self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
                 if self.temp4Error == 1: 
-                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensor Error", font=("Helvetica",24), fg='red')
+                    self.tempErrorLabel = Label(self.tab3, text="  Temperature Sensor Error  ", font=("Helvetica",24), fg='red')
                     self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
                 if self.row1Error == 1: 
                     self.row1ErrorLabel = Label(self.tab3, text="Row 1 Moisture Sensor Error", font=("Helvetica",24), fg='red')
@@ -375,13 +324,13 @@ class guiThread1(threading.Thread):
                     self.row3ErrorLabel.grid(row=3, column=1)
                 # Error Clearing
                 if self.temp1Error == 0:
-                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensors Good", font=("Helvetica",24), fg='green')
+                    self.tempErrorLabel = Label(self.tab3, text="  Temperature Sensors Good  ", font=("Helvetica",24), fg='green')
                     self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
                 if self.temp2Error == 0: 
-                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensors Good", font=("Helvetica",24), fg='green')
+                    self.tempErrorLabel = Label(self.tab3, text="  Temperature Sensors Good  ", font=("Helvetica",24), fg='green')
                     self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
                 if self.temp3Error == 0: 
-                    self.tempErrorLabel = Label(self.tab3, text="Temperature Sensors Good", font=("Helvetica",24), fg='green')
+                    self.tempErrorLabel = Label(self.tab3, text="  Temperature Sensors Good  ", font=("Helvetica",24), fg='green')
                     self.tempErrorLabel.grid(row=1, column=2, rowspan=3)
                 if self.temp4Error == 0: 
                     self.tempErrorLabel = Label(self.tab3, text="Temperature Sensors Good", font=("Helvetica",24), fg='green')
@@ -395,8 +344,70 @@ class guiThread1(threading.Thread):
                 if self.row3Error == 0: 
                     self.row3ErrorLabel = Label(self.tab3, text="Row 3 Moisture Sensor Good", font=("Helvetica",24), fg='green')
                     self.row3ErrorLabel.grid(row=3, column=1)
-                time.sleep(1)
+                #time.sleep(1)
 
+
+    def animate1(self, i, timeData, insideTemp, outsideTemp, row1, row2, row3):
+        # Get new data point 
+        dataI = int(self.tempIdata)
+        dataO = int(self.tempOdata)
+        data1 = int(self.row1data)
+        data2 = int(self.row2data)
+        data3 = int(self.row3data)
+        # Updating Current Data Labels
+        if dataI == -99:
+            self.temp1 = Label(self.tab1, text="ERR", font=("Helvetica",24))
+        else:
+            self.temp1 = Label(self.tab1, text="%d F" % dataI, font=("Helvetica",24))
+        if dataO == -99:
+            self.temp2 = Label(self.tab1, text="ERR", font=("Helvetica",24))
+        else:
+            self.temp2 = Label(self.tab1, text="%d F" % dataO, font=("Helvetica",24))
+        if data1 == -99:
+           self.mois1 = Label(self.tab1, text="ERR", font=("Helvetica",24))
+        else:
+           self.mois1 = Label(self.tab1,text="%d" % data1, font=("Helvetica",24))
+        if data2 == -99:
+            self.mois2 = Label(self.tab1, text="ERR", font=("Helvetica",24))
+        else:
+            self.mois2 = Label(self.tab1,text="%d" % data2, font=("Helvetica",24))
+        if data3 ==-99:
+            self.mois3 = Label(self.tab1, text="ERR", font=("Helvetica",24))
+        else:
+            self.mois3 = Label(self.tab1,text="%d" % data3, font=("Helvetica",24))
+        self.temp1.grid(row=1, column=2)
+        self.temp2.grid(row=3, column=2)
+        self.mois1.grid(row=5, column=2)
+        self.mois2.grid(row=7, column=2)
+        self.mois3.grid(row=9, column=2)
+        # Append new data point to existing list
+        insideTemp.append(dataI)
+        outsideTemp.append(dataO)
+        row1.append(data1)
+        row2.append(data2)
+        row3.append(data3)
+        timeData.append(dt.datetime.now().strftime("%m/%d %H:%M:%S"))
+        # Only plot last 10 data points
+        time_plot = timeData[-10:]
+        insideTemp_plot = insideTemp[-10:]
+        outsideTemp_plot = outsideTemp[-10:]
+        row1_plot = row1[-10:]
+        row2_plot = row2[-10:]
+        row3_plot = row3[-10:]
+        # Plot the data
+        self.ax1.clear()
+        self.ax1.plot(time_plot, insideTemp_plot, 'g', time_plot, outsideTemp_plot, 'b')
+        self.ax2.clear()
+        self.ax2.plot(time_plot, row1_plot, 'c', time_plot, row2_plot, 'm',time_plot, row3_plot, 'y')
+        # Configure the graphs
+        self.ax1.set_ylim(0, 120)
+        self.ax1.set_title('Temperature', fontsize=16)
+        self.ax1.legend(('Temp Inside','Temp Outside'), loc='upper right', shadow=True)
+        self.ax1.xaxis.set_tick_params(rotation=45, labelcolor='white')
+        self.ax2.set_ylim(0, 1000)
+        self.ax2.set_title('Moisture', fontsize=16)
+        self.ax2.legend(('Row 1','Row 2','Row 3'), loc='upper right', shadow=True)
+        self.ax2.xaxis.set_tick_params(rotation=45)
 
 
 
