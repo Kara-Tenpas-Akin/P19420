@@ -107,9 +107,13 @@ class guiThread1(threading.Thread):
         self.vent_yes.grid_forget()
         self.vent_no.grid_forget()
 
-    def automateAllSol(self):
-        #mygui2comQueue = send command to re-automate system to ardunio
-        self.mygui2comQueue.put("automateAll")    
+    def automaticMode(self):
+        #mygui2comQueue = send command to put system in automatic mode to ardunio
+        self.mygui2comQueue.put("automatic")
+
+    def manualMode(self):
+        #mygui2comQueue = send command to put system in manual mode to ardunio
+        self.mygui2comQueue.put("manual")  
 
     def masterSolenoidOn(self):
         #mygui2comQueue = send master soleniod on to arduino
@@ -234,8 +238,12 @@ class guiThread1(threading.Thread):
             self.w2.image = pipingPic  # keep a reference!
             self.w2.grid(row=3, column=0, columnspan=8, sticky=N)
             # Buttons
-            self.automateAllValves = Button(self.tab4, text="Set all Valves back to Automatic", command=self.automateAllSol, height=5, width=30)
+            # Mode
+            self.automateAllValves = Button(self.tab4, text="Set all Valves back to Automatic Mode", command=self.automatic, height=5, width=30)
             self.automateAllValves.grid(row=0, column=0, columnspan=8, sticky=N)
+            self.automateAllValves = Button(self.tab4, text="Set all Valves back to Manual Mode", command=self.manual, height=5, width=30)
+            self.automateAllValves.grid(row=0, column=0, columnspan=8, sticky=N)
+            # Solenoids
             self.masterValveOn= Button(self.tab4, text="Master Valve ON", command=self.masterSolenoidOn, height=5, width=19)
             self.masterValveOn.grid(row=1, column=1)
             self.masterValveOn= Button(self.tab4, text="Master Valve OFF", command=self.masterSolenoidOff, height=5, width=19)

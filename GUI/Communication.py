@@ -8,7 +8,7 @@ import struct
 import RPi.GPIO as GPIO
 port = '/dev/ttyACM0'
 
-s1 = serial.Serial(port,115200)
+s1 = serial.Serial(port,115200, timeout=1)
 s1.flushInput()
 
 Temp1Inside="01-01-01"
