@@ -11,7 +11,6 @@ gui2comQueue = Queue()
 
 guiThread = guiThread1('guiThread1',com2guiQueue, gui2comQueue)  
 guiThread.start()   #starts new thread and continues (non-blocking)
-print("gui started,starting comm")
 commThread = commThread2('commThread2',com2guiQueue, gui2comQueue)
 commThread.start() #starts new thread and continues (non-blocking)
 

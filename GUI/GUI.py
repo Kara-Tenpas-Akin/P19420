@@ -22,7 +22,6 @@ class guiThread1(threading.Thread):
         self.name = name
         self.mycom2guiQueue = com2guiQueue
         self.mygui2comQueue = gui2comQueue
-        print("Comm thread is initialized")
         # Comm to GUI
         self.tempIdata = 0
         self.tempOdata = 0
@@ -107,76 +106,150 @@ class guiThread1(threading.Thread):
         self.vent_yes.grid_forget()
         self.vent_no.grid_forget()
 
-    def automaticMode(self):
-        #mygui2comQueue = send command to put system in automatic mode to ardunio
-        self.mygui2comQueue.put("automatic")
-
     def manualMode(self):
         #mygui2comQueue = send command to put system in manual mode to ardunio
-        self.mygui2comQueue.put("manual")  
+        self.mygui2comQueue.put("autoMode")
+        self.manualAllValves.config(bg="yellow")
+        self.automateAllValves.config(bg="ivory2")
+        self.quitButtonTab4.config(row=0, column=7, columnspan=7)
+        w2.config(row=3, column=0, columnspan=7)
+        # Solenoids
+        self.masterValveOn= Button(self.tab4, text="Master Valve ON", command=self.masterSolenoidOn, height=5, width=19)
+        self.masterValveOn.grid(row=1, column=1)
+        self.masterValveOff= Button(self.tab4, text="Master Valve OFF", command=self.masterSolenoidOff, height=5, width=19)
+        self.masterValveOff.grid(row=2, column=1)
+        self.heaterValveOn= Button(self.tab4, text="Heater Valve ON", command=self.heaterSolenoidOn, height=5, width=19)
+        self.heaterValveOn.grid(row=1, column=2)
+        self.heaterValveOff= Button(self.tab4, text="Heater Valve OFF", command=self.heaterSolenoidOff, height=5, width=19)
+        self.heaterValveOff.grid(row=2, column=2)
+        self.waterValveOn= Button(self.tab4, text="Water Valve ON", command=self.waterSolenoidOn, height=5, width=19)
+        self.waterValveOn.grid(row=1, column=3)
+        self.waterValveOff= Button(self.tab4, text="Water Valve OFF", command=self.waterSolenoidOff, height=5, width=19)
+        self.waterValveOff.grid(row=2, column=3)
+        self.fertigateValveOn= Button(self.tab4, text="Fertigate Valve ON", command=self.fertigateSolenoidOn, height=5, width=20)
+        self.fertigateValveOn.grid(row=1, column=4)
+        self.fertigateValveOff= Button(self.tab4, text="Fertigate Valve OFF", command=self.fertigateSolenoidOff, height=5, width=20)
+        self.fertigateValveOff.grid(row=2, column=4)
+        self.row1ValveOn= Button(self.tab4, text="Row 1 Valve ON", command=self.row1SolenoidOn, height=5, width=19)
+        self.row1ValvedOn.grid(row=1, column=5)
+        self.row1ValveOff= Button(self.tab4, text="Row 1 Valve OFF", command=self.row1SolenoidOff, height=5, width=19)
+        self.row1ValveOff.grid(row=2, column=5)
+        self.row2ValveOn= Button(self.tab4, text="Row 2 Valve ON", command=self.row2SolenoidOn, height=5, width=19)
+        self.row2ValveOn.grid(row=1, column=6)
+        self.row2ValveOff= Button(self.tab4, text="Row 2 Valve OFF", command=self.row2SolenoidOff, height=5, width=19)
+        self.row2ValveOff.grid(row=2, column=6)
+        self.row3ValveOn= Button(self.tab4, text="Row 3 Valve ON", command=self.row3SolenoidOn, height=5, width=20)
+        self.row3ValveOn.grid(row=1, column=7)
+        self.row3ValveOff= Button(self.tab4, text="Row 3 Valve OFF", command=self.row3SolenoidOff, height=5, width=20)
+        self.row3ValveOff.grid(row=2, column=7)
+
+
+    def automaticMode(self):
+        #mygui2comQueue = send command to put system in automatic mode to ardunio
+        self.automateAllValves.config(bg="green")
+        self.manualAllValves.config(bg="ivory2")
+        self.mygui2comQueue.put("manualMode")
+        self.masterValveOn.grid_forget()
+        self.masterValveOff.grid_forget()
+        self.heaterValveOn.grid_forget()
+        self.heaterValveOff.grid_forget()
+        self.waterValveOn.grid_forget()
+        self.waterValveOff.grid_forget()
+        self.fertigateValveOn.grid_forget()
+        self.fertigateValveOff.grid_forget()
+        self.row1ValveOn.grid_forget()
+        self.row1ValveOff.grid_forget()
+        self.row2ValveOn.grid_forget()
+        self.row2ValveOff.grid_forget()
+        self.row3ValveOn.grid_forget()
+        self.row3ValveOff.grid_forget()
 
     def masterSolenoidOn(self):
         #mygui2comQueue = send master soleniod on to arduino
         self.mygui2comQueue.put("masterSolOn")
+        self.masterValveOn.config(bg="PaleGreen")
+        self.masterValveOff.config(bg="ivory2")
 
     def waterSolenoidOn(self):
         #mygui2comQueue = send water soleniod on to arduino
         self.mygui2comQueue.put("waterSolOn")
+        self.waterValveOn.config(bg="PaleGreen")
+        self.waterValveOff.config(bg="ivory2")
 
     def heaterSolenoidOn(self):
         #mygui2comQueue = send heater soleniod on to arduino
         self.mygui2comQueue.put("heatSolOn")
+        self.heaterValveOn.config(bg="PaleGreen")
+        self.heaterValveOff.config(bg="ivory2")
 
     def fertigateSolenoidOn(self):
         #mygui2comQueue = send fertigate soleniod on to arduino
         self.mygui2comQueue.put("fertSolOn")
+        self.fertigateValveOn.config(bg="PaleGreen")
+        self.fertigateValveOff.config(bg="ivory2")
 
     def row1SolenoidOn(self):
         #mygui2comQueue = send row 1 soleniod on to arduino
         self.mygui2comQueue.put("row1SolOn")
+        self.row1ValveOn.config(bg="PaleGreen")
+        self.row1ValveOff.config(bg="ivory2")
 
     def row2SolenoidOn(self):
         #mygui2comQueue = send row 2 soleniod on to arduino
         self.mygui2comQueue.put("row2SolOn")
+        self.row2ValveOn.config(bg="PaleGreen")
+        self.row2ValveOff.config(bg="ivory2")
         
     def row3SolenoidOn(self):
         #mygui2comQueue = send row 3 soleniod on to arduino
         self.mygui2comQueue.put("row3SolOn")
-
+        self.row3ValveOn.config(bg="PaleGreen")
+        self.row3ValveOff.config(bg="ivory2")
+        
     def masterSolenoidOff(self):
         #mygui2comQueue = send master soleniod off to arduino
         self.mygui2comQueue.put("masterSolOff")
-
+        self.masterValveOff.config(bg="PaleGreen")
+        self.masterValveOn.config(bg="ivory2")
+        
     def waterSolenoidOff(self):
         #mygui2comQueue = send water soleniod off to arduino
         self.mygui2comQueue.put("waterSolOff")
-
+        self.waterValveOff.config(bg="PaleGreen")
+        self.waterValveOn.config(bg="ivory2")
+        
     def heaterSolenoidOff(self):
         #mygui2comQueue = send heater soleniod off to arduino
         self.mygui2comQueue.put("heatSolOff")
-
+        self.heaterValveOff.config(bg="PaleGreen")
+        self.heaterValveOn.config(bg="ivory2")
+        
     def fertigateSolenoidOff(self):
         #mygui2comQueue = send fertigate soleniod off to arduino
         self.mygui2comQueue.put("fertSolOff")
-
+        self.fertigateValveOff.config(bg="PaleGreen")
+        self.fertigateValveOn.config(bg="ivory2")
+        
     def row1SolenoidOff(self):
         #mygui2comQueue = send row 1 soleniod off to arduino
         self.mygui2comQueue.put("row1SolOff")
+        self.row1ValveOff.config(bg="PaleGreen")
+        self.row1ValveOn.config(bg="ivory2")
         
     def row2SolenoidOff(self):
         #mygui2comQueue = send row 2 soleniod off to arduino
         self.mygui2comQueue.put("row2SolOff")
+        self.row2ValveOff.config(bg="PaleGreen")
+        self.row2ValveOn.config(bg="ivory2")
         
     def row3SolenoidOff(self):
         #mygui2comQueue = send row 3 soleniod off to arduino
         self.mygui2comQueue.put("row3SolOff")
-
+        self.row3ValveOff.config(bg="PaleGreen")
+        self.row3ValveOn.config(bg="ivory2")
+        
     def run(self):
         while(True):
-
-            #root = Tk()
-            #helv12 = tkFont.Font(family='Helvetica', size=12, weight='bold')
-            #button['font'] = helv12
             #define root and tabs
             self.root = Tk()
             self.root.title('Blackberry High Tunnel')
@@ -230,48 +303,20 @@ class guiThread1(threading.Thread):
             
             # Tab 4
             self.tab_control.add(self.tab4, text='Maintenance')
-            self.quitButton = Button(self.tab4, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
-            self.quitButton.grid(row=0, column=0, columnspan=8, sticky=E)
+            self.quitButtonTab4 = Button(self.tab4, text="Emergency Stop", command=self.client_exit, bg="red", fg="white",height = 5, width = 20)
+            self.quitButtonTab4.grid(row=0, column=5)
             # Picture of Valve Chart for Maintenance page
             pipingPic = tk.PhotoImage(file="Piping_Diagram.gif")
             self.w2 = tk.Label(self.tab4,image=pipingPic)
             self.w2.image = pipingPic  # keep a reference!
-            self.w2.grid(row=3, column=0, columnspan=8, sticky=N)
+            self.w2.grid(row=3, column=0, columnspan=3)
             # Buttons
             # Mode
-            self.automateAllValves = Button(self.tab4, text="Set all Valves back to Automatic Mode", command=self.automatic, height=5, width=30)
-            self.automateAllValves.grid(row=0, column=0, columnspan=8, sticky=N)
-            self.automateAllValves = Button(self.tab4, text="Set all Valves back to Manual Mode", command=self.manual, height=5, width=30)
-            self.automateAllValves.grid(row=0, column=0, columnspan=8, sticky=N)
-            # Solenoids
-            self.masterValveOn= Button(self.tab4, text="Master Valve ON", command=self.masterSolenoidOn, height=5, width=19)
-            self.masterValveOn.grid(row=1, column=1)
-            self.masterValveOn= Button(self.tab4, text="Master Valve OFF", command=self.masterSolenoidOff, height=5, width=19)
-            self.masterValveOn.grid(row=2, column=1)
-            self.masterValveOn= Button(self.tab4, text="Heater Valve ON", command=self.heaterSolenoidOn, height=5, width=19)
-            self.masterValveOn.grid(row=1, column=2)
-            self.masterValveOn= Button(self.tab4, text="Heater Valve OFF", command=self.heaterSolenoidOff, height=5, width=19)
-            self.masterValveOn.grid(row=2, column=2)
-            self.masterValveOn= Button(self.tab4, text="Water Valve ON", command=self.waterSolenoidOff, height=5, width=19)
-            self.masterValveOn.grid(row=1, column=3)
-            self.masterValveOn= Button(self.tab4, text="Water Valve OFF", command=self.waterSolenoidOff, height=5, width=19)
-            self.masterValveOn.grid(row=2, column=3)
-            self.masterValveOn= Button(self.tab4, text="Fertigate Valve ON", command=self.fertigateSolenoidOn, height=5, width=20)
-            self.masterValveOn.grid(row=1, column=4)
-            self.masterValveOn= Button(self.tab4, text="Fertigate Valve OFF", command=self.fertigateSolenoidOff, height=5, width=20)
-            self.masterValveOn.grid(row=2, column=4)
-            self.masterValveOn= Button(self.tab4, text="Row 1 Valve ON", command=self.row1SolenoidOn, height=5, width=19)
-            self.masterValveOn.grid(row=1, column=5)
-            self.masterValveOn= Button(self.tab4, text="Row 1 Valve OFF", command=self.row1SolenoidOff, height=5, width=19)
-            self.masterValveOn.grid(row=2, column=5)
-            self.masterValveOn= Button(self.tab4, text="Row 2 Valve ON", command=self.row2SolenoidOn, height=5, width=19)
-            self.masterValveOn.grid(row=1, column=6)
-            self.masterValveOn= Button(self.tab4, text="Row 2 Valve OFF", command=self.row2SolenoidOff, height=5, width=19)
-            self.masterValveOn.grid(row=2, column=6)
-            self.masterValveOn= Button(self.tab4, text="Row 3 Valve ON", command=self.row3SolenoidOn, height=5, width=20)
-            self.masterValveOn.grid(row=1, column=7)
-            self.masterValveOn= Button(self.tab4, text="Row 3 Valve OFF", command=self.row3SolenoidOff, height=5, width=20)
-            self.masterValveOn.grid(row=2, column=7)
+            self.automateAllValves = Button(self.tab4, text="Automatic Mode", command=self.automaticMode, height=5, width=19)
+            self.automateAllValves.grid(row=0, column=1)
+            self.manualAllValves = Button(self.tab4, text="Manual Mode", command=self.manualMode, height=5, width=19)
+            self.manualAllValves.grid(row=0, column=2)
+
             
             self.tab_control.pack(expand=1, fill='both')
             

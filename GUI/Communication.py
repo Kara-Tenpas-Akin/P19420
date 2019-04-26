@@ -46,7 +46,6 @@ class commThread2(threading.Thread):
         self.name = name
         self.mycom2guiQueue = com2guiQueue
         self.mygui2comQueue = gui2comQueue
-        print("Comm thread is initialized")
         # Comm to GUI
         self.tempIdata = 0
         self.tempOdata = 0
