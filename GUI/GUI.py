@@ -94,7 +94,6 @@ class guiThread1(threading.Thread):
         self.water_no.grid_forget()
 
     def yes_vent(self):
-        #mygui2comQueue = send ventilation to ardunio
         self.vent_ask.grid_forget()
         self.vent_yes.grid_forget()
         self.vent_no.grid_forget()
@@ -111,37 +110,37 @@ class guiThread1(threading.Thread):
         self.mygui2comQueue.put("autoMode")
         self.manualAllValves.config(bg="yellow")
         self.automateAllValves.config(bg="ivory2")
-        self.quitButtonTab4.config(row=0, column=7, columnspan=7)
-        w2.config(row=3, column=0, columnspan=7)
+        self.quitButtonTab4.grid(row=0, column=7, columnspan=7)
+        self.w2.grid(row=3, column=0, columnspan=7)
         # Solenoids
         self.masterValveOn= Button(self.tab4, text="Master Valve ON", command=self.masterSolenoidOn, height=5, width=19)
-        self.masterValveOn.grid(row=1, column=1)
+        self.masterValveOn.grid(row=1, column=1, sticky=W)
         self.masterValveOff= Button(self.tab4, text="Master Valve OFF", command=self.masterSolenoidOff, height=5, width=19)
-        self.masterValveOff.grid(row=2, column=1)
+        self.masterValveOff.grid(row=2, column=1, sticky=W)
         self.heaterValveOn= Button(self.tab4, text="Heater Valve ON", command=self.heaterSolenoidOn, height=5, width=19)
-        self.heaterValveOn.grid(row=1, column=2)
+        self.heaterValveOn.grid(row=1, column=2, sticky=W)
         self.heaterValveOff= Button(self.tab4, text="Heater Valve OFF", command=self.heaterSolenoidOff, height=5, width=19)
-        self.heaterValveOff.grid(row=2, column=2)
+        self.heaterValveOff.grid(row=2, column=2, sticky=W)
         self.waterValveOn= Button(self.tab4, text="Water Valve ON", command=self.waterSolenoidOn, height=5, width=19)
-        self.waterValveOn.grid(row=1, column=3)
+        self.waterValveOn.grid(row=1, column=3, sticky=W)
         self.waterValveOff= Button(self.tab4, text="Water Valve OFF", command=self.waterSolenoidOff, height=5, width=19)
-        self.waterValveOff.grid(row=2, column=3)
+        self.waterValveOff.grid(row=2, column=3, sticky=W)
         self.fertigateValveOn= Button(self.tab4, text="Fertigate Valve ON", command=self.fertigateSolenoidOn, height=5, width=20)
-        self.fertigateValveOn.grid(row=1, column=4)
+        self.fertigateValveOn.grid(row=1, column=4, sticky=W)
         self.fertigateValveOff= Button(self.tab4, text="Fertigate Valve OFF", command=self.fertigateSolenoidOff, height=5, width=20)
-        self.fertigateValveOff.grid(row=2, column=4)
+        self.fertigateValveOff.grid(row=2, column=4, sticky=W)
         self.row1ValveOn= Button(self.tab4, text="Row 1 Valve ON", command=self.row1SolenoidOn, height=5, width=19)
-        self.row1ValvedOn.grid(row=1, column=5)
+        self.row1ValveOn.grid(row=1, column=5, sticky=W)
         self.row1ValveOff= Button(self.tab4, text="Row 1 Valve OFF", command=self.row1SolenoidOff, height=5, width=19)
-        self.row1ValveOff.grid(row=2, column=5)
+        self.row1ValveOff.grid(row=2, column=5, sticky=W)
         self.row2ValveOn= Button(self.tab4, text="Row 2 Valve ON", command=self.row2SolenoidOn, height=5, width=19)
-        self.row2ValveOn.grid(row=1, column=6)
+        self.row2ValveOn.grid(row=1, column=6, sticky=W)
         self.row2ValveOff= Button(self.tab4, text="Row 2 Valve OFF", command=self.row2SolenoidOff, height=5, width=19)
-        self.row2ValveOff.grid(row=2, column=6)
+        self.row2ValveOff.grid(row=2, column=6, sticky=W)
         self.row3ValveOn= Button(self.tab4, text="Row 3 Valve ON", command=self.row3SolenoidOn, height=5, width=20)
-        self.row3ValveOn.grid(row=1, column=7)
+        self.row3ValveOn.grid(row=1, column=7, sticky=W)
         self.row3ValveOff= Button(self.tab4, text="Row 3 Valve OFF", command=self.row3SolenoidOff, height=5, width=20)
-        self.row3ValveOff.grid(row=2, column=7)
+        self.row3ValveOff.grid(row=2, column=7, sticky=W)
 
 
     def automaticMode(self):
@@ -309,14 +308,13 @@ class guiThread1(threading.Thread):
             pipingPic = tk.PhotoImage(file="Piping_Diagram.gif")
             self.w2 = tk.Label(self.tab4,image=pipingPic)
             self.w2.image = pipingPic  # keep a reference!
-            self.w2.grid(row=3, column=0, columnspan=3)
+            self.w2.grid(row=3, column=0, columnspan=7)
             # Buttons
             # Mode
             self.automateAllValves = Button(self.tab4, text="Automatic Mode", command=self.automaticMode, height=5, width=19)
             self.automateAllValves.grid(row=0, column=1)
             self.manualAllValves = Button(self.tab4, text="Manual Mode", command=self.manualMode, height=5, width=19)
             self.manualAllValves.grid(row=0, column=2)
-
             
             self.tab_control.pack(expand=1, fill='both')
             
