@@ -107,7 +107,7 @@ class guiThread1(threading.Thread):
 
     def manualMode(self):
         #mygui2comQueue = send command to put system in manual mode to ardunio
-        self.mygui2comQueue.put("autoMode")
+        self.mygui2comQueue.put("manualMode")
         self.manualAllValves.config(bg="yellow")
         self.automateAllValves.config(bg="ivory2")
         self.quitButtonTab4.grid(row=0, column=7, columnspan=7)
@@ -147,7 +147,7 @@ class guiThread1(threading.Thread):
         #mygui2comQueue = send command to put system in automatic mode to ardunio
         self.automateAllValves.config(bg="green")
         self.manualAllValves.config(bg="ivory2")
-        self.mygui2comQueue.put("manualMode")
+        self.mygui2comQueue.put("autoMode")
         self.masterValveOn.grid_forget()
         self.masterValveOff.grid_forget()
         self.heaterValveOn.grid_forget()
@@ -409,23 +409,23 @@ class guiThread1(threading.Thread):
         if dataI == -99:
             self.temp1 = Label(self.tab1, text="ERR", font=("Helvetica",24))
         else:
-            self.temp1 = Label(self.tab1, text="%d F" % dataI, font=("Helvetica",24))
+            self.temp1 = Label(self.tab1, text=" %d F " % dataI, font=("Helvetica",24))
         if dataO == -99:
-            self.temp2 = Label(self.tab1, text="ERR", font=("Helvetica",24))
+            self.temp2 = Label(self.tab1, text=" ERR ", font=("Helvetica",24))
         else:
-            self.temp2 = Label(self.tab1, text="%d F" % dataO, font=("Helvetica",24))
+            self.temp2 = Label(self.tab1, text=" %d F " % dataO, font=("Helvetica",24))
         if data1 == -99:
-           self.mois1 = Label(self.tab1, text="ERR", font=("Helvetica",24))
+           self.mois1 = Label(self.tab1, text=" ERR ", font=("Helvetica",24))
         else:
-           self.mois1 = Label(self.tab1,text="%d" % data1, font=("Helvetica",24))
+           self.mois1 = Label(self.tab1,text=" %d " % data1, font=("Helvetica",24))
         if data2 == -99:
-            self.mois2 = Label(self.tab1, text="ERR", font=("Helvetica",24))
+            self.mois2 = Label(self.tab1, text=" ERR ", font=("Helvetica",24))
         else:
-            self.mois2 = Label(self.tab1,text="%d" % data2, font=("Helvetica",24))
+            self.mois2 = Label(self.tab1,text=" %d " % data2, font=("Helvetica",24))
         if data3 ==-99:
-            self.mois3 = Label(self.tab1, text="ERR", font=("Helvetica",24))
+            self.mois3 = Label(self.tab1, text=" ERR ", font=("Helvetica",24))
         else:
-            self.mois3 = Label(self.tab1,text="%d" % data3, font=("Helvetica",24))
+            self.mois3 = Label(self.tab1,text=" %d " % data3, font=("Helvetica",24))
         self.temp1.grid(row=1, column=2)
         self.temp2.grid(row=3, column=2)
         self.mois1.grid(row=5, column=2)

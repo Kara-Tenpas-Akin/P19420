@@ -76,7 +76,7 @@ class commThread2(threading.Thread):
                     if TxReq==0: #Read Rx
                         inputValue = str(s1.readline())
                         if inputValue != None:
-                            print(inputValue)
+                            #print(inputValue)
                             # s = str(s1.readline())
                             # print(s)
                             if "$" not in inputValue:
@@ -168,7 +168,6 @@ class commThread2(threading.Thread):
                             print("  ERROR!! queue was not empty, but coudn't get anything out of it")
                             #pass
                         while(self.message == "eStop"):        #eStop Send
-                            print("eStop was received from GUI")
                             GPIO.output(23,1)
                             s1.write(bytes('%d' %40, 'UTF-8'))
                             #time.sleep(.25)
