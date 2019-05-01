@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Graphical User Interface for RIT MSD P19420
-# Created by Kara Tenpas-Akin
+# Created by Kara Akin
 from tkinter import *           # The Tk package
 from tkinter import ttk
 from tkinter import messagebox
@@ -73,6 +73,12 @@ class guiThread1(threading.Thread):
         self.fert_ask.grid_forget()
         self.fert_yes.grid_forget()
         self.fert_no.grid_forget()
+        self.water_ask.grid_forget()
+        self.water_yes.grid_forget()
+        self.water_no.grid_forget()
+        self.vent_ask.grid_forget()
+        self.vent_yes.grid_forget()
+        self.vent_no.grid_forget()
         #mygui2comQueue = send fertigate to ardunio
         self.mygui2comQueue.put("fertOn")
 
@@ -80,6 +86,12 @@ class guiThread1(threading.Thread):
         self.fert_ask.grid_forget()
         self.fert_yes.grid_forget()
         self.fert_no.grid_forget()
+        self.water_ask.grid_forget()
+        self.water_yes.grid_forget()
+        self.water_no.grid_forget()
+        self.vent_ask.grid_forget()
+        self.vent_yes.grid_forget()
+        self.vent_no.grid_forget()
 
     def yes_water(self):
         self.water_ask.grid_forget()
@@ -104,6 +116,9 @@ class guiThread1(threading.Thread):
         self.vent_ask.grid_forget()
         self.vent_yes.grid_forget()
         self.vent_no.grid_forget()
+        self.fert_ask.grid_forget()
+        self.fert_yes.grid_forget()
+        self.fert_no.grid_forget()
 
     def manualMode(self):
         #mygui2comQueue = send command to put system in manual mode to ardunio
@@ -333,12 +348,10 @@ class guiThread1(threading.Thread):
             row2 = []
             row3 = []
             
-
             self.plotcanvas1 = FigureCanvasTkAgg(self.fig1, self.tab1)
-            self.plotcanvas1.get_tk_widget().grid(column=1, row=1, rowspan=10)
-            self.ani1 = animation.FuncAnimation(self.fig1, self.animate1, fargs=(timeData, insideTemp, outsideTemp, row1, row2, row3),interval=3000, blit=False)
-            
-           
+            self.plotcanvas1.get_tk_widget().grid(column=1, row=1, rowspan=12)
+            self.ani1 = animation.FuncAnimation(self.fig1, self.animate1, fargs=(timeData, insideTemp, outsideTemp, row1, row2, row3),interval=900000, blit=False)
+                
             import time
             while True:
                 self.root.update_idletasks()
@@ -346,9 +359,9 @@ class guiThread1(threading.Thread):
                 # Check queue here
                 try:
                     self.tempIdata, self.tempOdata, self.row1data, self.row2data, self.row3data, self.temp1Error, self.temp2Error, self.temp3Error, self.temp4Error, self.row1Error, self.row2Error, self.row3Error = self.mycom2guiQueue.get(block=False, timeout=None)
-                    print(".")
+                    #print(".")
                 except:
-                    print("*")
+                    #print("*")
                     time.sleep(1)
                     #pass
                 # Error handling
@@ -437,7 +450,7 @@ class guiThread1(threading.Thread):
         row1.append(data1)
         row2.append(data2)
         row3.append(data3)
-        timeData.append(dt.datetime.now().strftime("%m/%d %H:%M:%S"))
+        timeData.append(dt.datetime.now().strftime("%m/%d %H:%M"))
         # Only plot last 10 data points
         time_plot = timeData[-10:]
         insideTemp_plot = insideTemp[-10:]
@@ -449,13 +462,13 @@ class guiThread1(threading.Thread):
         self.ax1.clear()
         self.ax1.plot(time_plot, insideTemp_plot, 'g', time_plot, outsideTemp_plot, 'b')
         self.ax2.clear()
-        self.ax2.plot(time_plot, row1_plot, 'c', time_plot, row2_plot, 'm',time_plot, row3_plot, 'y')
+        self.ax2.plot(time_plot, row1_plot, 'c', time_plot, row2_plot, 'm', time_plot, row3_plot, 'y')
         # Configure the graphs
-        self.ax1.set_ylim(0, 120)
+        self.ax1.set_ylim(-10, 120)
         self.ax1.set_title('Temperature', fontsize=16)
         self.ax1.legend(('Temp Inside','Temp Outside'), loc='upper right', shadow=True)
         self.ax1.xaxis.set_tick_params(rotation=45, labelcolor='white')
-        self.ax2.set_ylim(0, 1000)
+        self.ax2.set_ylim(0, 1050)
         self.ax2.set_title('Moisture', fontsize=16)
         self.ax2.legend(('Row 1','Row 2','Row 3'), loc='upper right', shadow=True)
         self.ax2.xaxis.set_tick_params(rotation=45)
