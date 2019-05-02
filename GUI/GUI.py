@@ -335,7 +335,7 @@ class guiThread1(threading.Thread):
             
             # Graphs
             style.use('ggplot')
-            self.fig1 = plt.figure(figsize=(11, 6))
+            self.fig1 = plt.figure(figsize=(11, 7))
             # Temp Graph
             self.ax1 = self.fig1.add_subplot(2, 1, 1)
             # Moisture Graph
@@ -356,6 +356,7 @@ class guiThread1(threading.Thread):
             while True:
                 self.root.update_idletasks()
                 self.root.update()
+                self.root.attributes("-fullscreen",True)
                 # Check queue here
                 try:
                     self.tempIdata, self.tempOdata, self.row1data, self.row2data, self.row3data, self.temp1Error, self.temp2Error, self.temp3Error, self.temp4Error, self.row1Error, self.row2Error, self.row3Error = self.mycom2guiQueue.get(block=False, timeout=None)
@@ -450,7 +451,7 @@ class guiThread1(threading.Thread):
         row1.append(data1)
         row2.append(data2)
         row3.append(data3)
-        timeData.append(dt.datetime.now().strftime("%m/%d %H:%M"))
+        timeData.append(dt.datetime.now().strftime("%m/%d %H:%M:%S"))
         # Only plot last 10 data points
         time_plot = timeData[-10:]
         insideTemp_plot = insideTemp[-10:]
@@ -471,7 +472,7 @@ class guiThread1(threading.Thread):
         self.ax2.set_ylim(0, 1050)
         self.ax2.set_title('Moisture', fontsize=16)
         self.ax2.legend(('Row 1','Row 2','Row 3'), loc='upper right', shadow=True)
-        self.ax2.xaxis.set_tick_params(rotation=45)
+        self.ax2.xaxis.set_tick_params(rotation=30)
 
 
 
