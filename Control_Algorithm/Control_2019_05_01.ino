@@ -39,7 +39,7 @@ void TurnOffReqSystems(void);
 //--------------------------------------------------------------------------------------------------------------------------------
 //                                                      DEFINE VARIABLES
 //--------------------------------------------------------------------------------------------------------------------------------
-float moistureSetPoint = 500, tempSetPoint = 85, temp = 0, heatSetPoint = 40;
+float moistureSetPoint = 500, tempSetPoint = 100, temp = 0, heatSetPoint = 40;
 float Row1AvgMoisture, Row2AvgMoisture, Row3AvgMoisture, AvgTempInside, AvgTempOutside;
 unsigned int irrigationFlag[4] = {}, ventilationFlag = 0, heatFlag = 0, i = 0, j = 0, enabled_sensors = 0, error = 0, Rx = 0;
 unsigned int ventilationOverride = 0, fertigationOverride = 0, irrigationOverride = 0, autoMode = 1, manualMode = 0;
@@ -77,17 +77,18 @@ void setup() {
   Wire.begin();
   sensors.begin(); //start library for temp sensors
   //set inputs/outputs
-  pinMode(35, INPUT); //Float Sensor
-  pinMode(42, OUTPUT); //Master
+  pinMode(33, INPUT_PULLUP); //Float Sensor LOW
+  pinMode(35, INPUT_PULLUP); //Float Sensor HIGH
+  pinMode(45, OUTPUT); //Master
   pinMode(43, OUTPUT); //Straight through
   pinMode(44, OUTPUT); //Hot Water IN
-  pinMode(45, OUTPUT); //Hot Water PUMP
-  pinMode(46, OUTPUT); //Fertilizer
-  pinMode(47, OUTPUT); //Row 1
+  pinMode(49, OUTPUT); //Hot Water PUMP
+  pinMode(47, OUTPUT); //Fertilizer
+  pinMode(42, OUTPUT); //Row 1
   pinMode(48, OUTPUT); //Row 2
-  pinMode(49, OUTPUT); //Row 3
+  pinMode(46, OUTPUT); //Row 3
   pinMode(50, OUTPUT); //FALSE
-  pinMode(51, OUTPUT); //Fan
+  pinMode(25, OUTPUT); //Fan
   digitalWrite(42, LOW);
   digitalWrite(43, LOW);
   digitalWrite(44, LOW);
@@ -97,10 +98,10 @@ void setup() {
   digitalWrite(48, LOW);
   digitalWrite(49, LOW);
   digitalWrite(50, LOW);
-  digitalWrite(51, LOW);
+  digitalWrite(25, LOW);
   i = 1;
   while(i<4){
-  MoistureSensors[i].high_limit = 900;
+  MoistureSensors[i].high_limit = 1100;
   MoistureSensors[i].low_limit = 100;
   i++;
   }
@@ -194,8 +195,12 @@ void loop() {
       WaitAndCheck(waitTime); //set time
       TurnOffReqSystems();
     }
-    else if (manualMode == 1)
+    //else if (manualMode == 1)
+      //ManualMode();
+    while (manualMode == 1){
+      ReadData();
       ManualMode();
+    }
   }
   while(ESTOP == 1){
     TurnOffReqSystems();
@@ -288,21 +293,6 @@ void ReadTemp(void) {
     delay(1000);
     Serial.begin(9600);
     delay(1000);
-    tempTString = "";
-    tempTString2 = "";
-    tempTString3 = "";
-    if (TempSensors[i].errorCode == 0){
-      tempTString = messageTBeg + i;
-      tempTString2 = tempTString + messageMid;
-      tempTString3 = tempTString2 + (int) TempSensors[i].reading;
-      TempSensors[i].mtype = tempTString3 + messageEnd;
-    }
-    else if(TempSensors[i].errorCode == 1){
-      tempTString = messageERRORBeg + "4";
-      tempTString2 = tempTString + messageMid;
-      tempTString3 = tempTString2 + messageERRORReading;
-      TempSensors[i].mtype = tempTString3 + messageEnd;
-    }
     i++;
   }
 }
@@ -432,11 +422,11 @@ void SendData(void) {
     // Send a message!
     rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
     rf69.waitPacketSent();
-    delay(100);
+    delay(200);
     i++;
   }
   i = 1;
-  while(i <5) {
+  while(i <3) {
     char radiopacket[20] = "";
     TempSensors[i].mtype.toCharArray(radiopacket,20);
     itoa(packetnum++, radiopacket+15, 15);
@@ -445,7 +435,7 @@ void SendData(void) {
     // Send a message!
     rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
     rf69.waitPacketSent();
-    delay(100);
+    delay(200);
     i++;
   }
 }
@@ -573,6 +563,21 @@ void CheckTemp(void) {
     i++;
   }
   AvgTempInside = AvgTempInside / enabled_sensors;
+  tempTString = "";
+  tempTString2 = "";
+  tempTString3 = "";
+  if (AvgTempInside != 0){
+    tempTString = messageTBeg + 1;
+    tempTString2 = tempTString + messageMid;
+    tempTString3 = tempTString2 + (int) AvgTempInside;
+    TempSensors[1].mtype = tempTString3 + messageEnd;
+  }
+  else if(AvgTempInside == 0){
+    tempTString = messageERRORBeg + "4";
+    tempTString2 = tempTString + messageMid;
+    tempTString3 = tempTString2 + messageERRORReading;
+    TempSensors[1].mtype = tempTString3 + messageEnd;
+  }
 
   //Outside Temp
   enabled_sensors = 0;
@@ -588,6 +593,21 @@ void CheckTemp(void) {
     i++;
   }
   AvgTempOutside = AvgTempOutside / enabled_sensors;
+  tempTString = "";
+  tempTString2 = "";
+  tempTString3 = "";
+  if (AvgTempOutside != 0){
+    tempTString = messageTBeg + 2;
+    tempTString2 = tempTString + messageMid;
+    tempTString3 = tempTString2 + (int) AvgTempOutside;
+    TempSensors[2].mtype = tempTString3 + messageEnd;
+  }
+  else if(AvgTempOutside == 0){
+    tempTString = messageERRORBeg + "4";
+    tempTString2 = tempTString + messageMid;
+    tempTString3 = tempTString2 + messageERRORReading;
+    TempSensors[2].mtype = tempTString3 + messageEnd;
+  }
 
   if ((AvgTempInside >= tempSetPoint) || ventilationOverride == 1) {
     ventilationFlag = 1;
@@ -615,6 +635,14 @@ Serial.print("Heating System: ");
 Serial.println("");
 Serial.print(heatFlag);
 Serial.println("");
+Serial.print("Top Float Sensor: ");
+Serial.println("");
+Serial.print(digitalRead(35));
+Serial.println("");
+Serial.print("Bottom Float Sensor: ");
+Serial.println("");
+Serial.print(digitalRead(33));
+Serial.println("");
 Serial.println("");
 delay(1000);
 Serial.begin(9600);
@@ -633,37 +661,37 @@ void CheckFertigation(void){
   Serial.println("");
   Serial.println("");
 }
-//--------------------------------------------------------------------------------------------------------------------------------?????????????????Set Pins???????????????
+//-------------------------------------------------------------------------------------------------------------------------------
 //Turn On Systems
 void TurnOnReqSystems(void) {
   //MASTER WATER VALVE
   if (irrigationFlag[1] == 1 || irrigationFlag[2] == 1 || irrigationFlag[3] == 1) //Turn on master valve if any row needs water
-    digitalWrite(42, HIGH);
+    digitalWrite(45, HIGH);
   //ROW ONE - THREE WATER VALVE
-  i = 1;
-  while (i < 4) {
-    if (irrigationFlag[i] == 1) //Turn on valve for desired row
-      digitalWrite(46 + i, HIGH);
-    i++;
-  }
+  if (irrigationFlag[1] == 1) //Turn on valve for desired row
+    digitalWrite(42, HIGH);
+  if (irrigationFlag[2] == 1) //Turn on valve for desired row
+    digitalWrite(48, HIGH);
+  if (irrigationFlag[3] == 1) //Turn on valve for desired row
+    digitalWrite(46, HIGH);
   //VENTILATION
   if (ventilationFlag == 1) //Turn on fan
-    digitalWrite(51, HIGH);
+    digitalWrite(25, HIGH);
   //HEAT
-  if ((heatFlag == 1) && (irrigationFlag[1] == 1 || irrigationFlag[2] == 1 || irrigationFlag[3] == 1) && (fertigationFlag == 0) && (digitalRead(35)==HIGH)){ //Turn on heating
-    digitalWrite(45, HIGH);
+  if ((heatFlag == 1) && (irrigationFlag[1] == 1 || irrigationFlag[2] == 1 || irrigationFlag[3] == 1) && (fertigationFlag == 0) && (digitalRead(33)==0)){ //Turn on heating
+    digitalWrite(49, HIGH);
     digitalWrite(43, LOW);
   }
   //WATER ONLY
   if ((irrigationFlag[1] == 1 || irrigationFlag[2] == 1 || irrigationFlag[3] == 1) && (heatFlag == 0) && (fertigationFlag == 0))
     digitalWrite(43, HIGH);
-  else if ((irrigationFlag[1] == 1 || irrigationFlag[2] == 1 || irrigationFlag[3] == 1) && (heatFlag == 1) && (digitalRead(35)==LOW) && (fertigationFlag == 0))
+  else if ((irrigationFlag[1] == 1 || irrigationFlag[2] == 1 || irrigationFlag[3] == 1) && (heatFlag == 1) && (digitalRead(33)==1) && (fertigationFlag == 0))
     digitalWrite(43, HIGH);
   //FERTIGATION
   if (fertigationFlag == 1){
     digitalWrite(47, HIGH);
+    digitalWrite(42, HIGH);
     digitalWrite(48, HIGH);
-    digitalWrite(49, HIGH);
     digitalWrite(46, HIGH);
   }
 }
@@ -675,6 +703,7 @@ void TurnOffReqSystems(void) {
     digitalWrite(41 + i, LOW); //should we just turn off all systems here? Probably...
     i++;
   }
+  digitalWrite(25, LOW);
   ventilationFlag = 0;
   heatFlag = 0;
   irrigationFlag[4] = {0};
@@ -693,9 +722,9 @@ void WaitAndCheck(unsigned int) {
 //--------------------------------------------------------------------------------------------------------------------------------
 void ManualMode(void){
   if(forceMasterSolenoidOn == 1)
-    digitalWrite(42, HIGH);
+    digitalWrite(45, HIGH);
   if(forceMasterSolenoidOff == 1)
-    digitalWrite(42, LOW);
+    digitalWrite(45, LOW);
   if(forceWaterSolenoidOn == 1)
     digitalWrite(43, HIGH);
   if(forceWaterSolenoidOff == 1)
@@ -705,20 +734,22 @@ void ManualMode(void){
   if(forceHeatSolenoidOff == 1)
     digitalWrite(44, LOW);
   if(forceFertigationSolenoidOn == 1)
-    digitalWrite(46, HIGH);
-  if(forceFertigationSolenoidOff == 1)
-    digitalWrite(46, LOW);
-  if(forceRow1SolenoidOn == 1)
     digitalWrite(47, HIGH);
-  if(forceRow1SolenoidOff == 1)
+  if(forceFertigationSolenoidOff == 1)
     digitalWrite(47, LOW);
+  if(forceRow1SolenoidOn == 1)
+    digitalWrite(42, HIGH);
+  if(forceRow1SolenoidOff == 1)
+    digitalWrite(42, LOW);
   if(forceRow2SolenoidOn == 1)
     digitalWrite(48, HIGH);
   if(forceRow2SolenoidOff == 1)
     digitalWrite(48, LOW);
   if(forceRow3SolenoidOn == 1)
-    digitalWrite(49, HIGH);
+    digitalWrite(46, HIGH);
   if(forceRow3SolenoidOff == 1)
-    digitalWrite(49, LOW);
+    digitalWrite(46, LOW);
+  else
+    delay(1);
 }
 //--------------------------------------------------------------------------------------------------------------------------------
