@@ -350,13 +350,14 @@ class guiThread1(threading.Thread):
             
             self.plotcanvas1 = FigureCanvasTkAgg(self.fig1, self.tab1)
             self.plotcanvas1.get_tk_widget().grid(column=1, row=1, rowspan=12)
-            self.ani1 = animation.FuncAnimation(self.fig1, self.animate1, fargs=(timeData, insideTemp, outsideTemp, row1, row2, row3),interval=900000, blit=False)
+            self.ani1 = animation.FuncAnimation(self.fig1, self.animate1, fargs=(timeData, insideTemp, outsideTemp, row1, row2, row3),interval=600000, blit=False)
                 
             import time
             while True:
                 self.root.update_idletasks()
                 self.root.update()
                 self.root.attributes("-fullscreen",True)
+                self.root.config(cursor='none')
                 # Check queue here
                 try:
                     self.tempIdata, self.tempOdata, self.row1data, self.row2data, self.row3data, self.temp1Error, self.temp2Error, self.temp3Error, self.temp4Error, self.row1Error, self.row2Error, self.row3Error = self.mycom2guiQueue.get(block=False, timeout=None)

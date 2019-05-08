@@ -235,7 +235,7 @@ class commThread2(threading.Thread):
 			
                         while(self.message == "heatSolOn"):		# Heater Water Sol On Send
                             GPIO.output(24,1)
-                            s1.write(bytes('%d' %24, 'UTF-8'))
+                            s1.write(bytes('%d' %23, 'UTF-8'))
                             #time.sleep(.25)
                             inputValue = str(s1.readline())
                             print(inputValue)
