@@ -452,7 +452,7 @@ class guiThread1(threading.Thread):
         row1.append(data1)
         row2.append(data2)
         row3.append(data3)
-        timeData.append(dt.datetime.now().strftime("%m/%d %H:%M:%S"))
+        timeData.append(dt.datetime.now().strftime("%m/%d %H:%M"))
         # Only plot last 10 data points
         time_plot = timeData[-10:]
         insideTemp_plot = insideTemp[-10:]
